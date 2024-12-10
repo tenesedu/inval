@@ -104,7 +104,7 @@ const Index = () => {
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-heading text-lg font-semibold">Top Investors</h2>
                 <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger className="w-[140px] bg-white">
                     <SelectValue placeholder="Select country" />
                   </SelectTrigger>
                   <SelectContent>
