@@ -1,8 +1,10 @@
 import { Navbar } from "@/components/Navbar";
 import { Feed } from "@/components/Feed";
-import { TrendingUp, Users, Award } from "lucide-react";
+import { TrendingUp, Users, Award, Brain } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const TOP_INVESTORS = [
   {
@@ -39,17 +41,43 @@ const TOP_INVESTORS = [
     country: "Japan",
     return: 21.3,
     specialty: "Forex Trading"
+  },
+  {
+    name: "Maria Silva",
+    avatar: "/placeholder.svg",
+    country: "Brazil",
+    return: 24.1,
+    specialty: "Commodities"
+  },
+  {
+    name: "Alex Thompson",
+    avatar: "/placeholder.svg",
+    country: "UK",
+    return: 20.7,
+    specialty: "ESG Investments"
+  },
+  {
+    name: "Li Wei",
+    avatar: "/placeholder.svg",
+    country: "China",
+    return: 23.4,
+    specialty: "Growth Stocks"
   }
 ];
 
 const Index = () => {
   const [selectedCountry, setSelectedCountry] = useState<string>("all");
+  const navigate = useNavigate();
   
   const filteredInvestors = selectedCountry === "all" 
     ? TOP_INVESTORS 
     : TOP_INVESTORS.filter(investor => investor.country === selectedCountry);
 
   const countries = ["all", ...new Set(TOP_INVESTORS.map(investor => investor.country))];
+
+  const handleAiGainsClick = () => {
+    navigate('/ai-gains');
+  };
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -59,36 +87,57 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Left Sidebar */}
           <div className="hidden md:block md:col-span-3">
-            <div className="bg-white rounded-lg border p-4">
-              <h2 className="font-heading text-lg font-semibold mb-4">Quick Stats</h2>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-primary/10 rounded-full">
-                    <TrendingUp className="h-5 w-5 text-primary" />
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg border p-4">
+                <h2 className="font-heading text-lg font-semibold mb-4">Quick Stats</h2>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-primary/10 rounded-full">
+                      <TrendingUp className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-neutral-500">Total Return</p>
+                      <p className="font-semibold text-success">+24.5%</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-neutral-500">Total Return</p>
-                    <p className="font-semibold text-success">+24.5%</p>
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-primary/10 rounded-full">
+                      <Users className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-neutral-500">Followers</p>
+                      <p className="font-semibold">1,234</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-primary/10 rounded-full">
+                      <Award className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-neutral-500">Ranking</p>
+                      <p className="font-semibold">#42</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-primary/10 rounded-full">
-                    <Users className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-500">Followers</p>
-                    <p className="font-semibold">1,234</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-primary/10 rounded-full">
-                    <Award className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-500">Ranking</p>
-                    <p className="font-semibold">#42</p>
+              </div>
+
+              {/* AI Gains Section */}
+              <div className="bg-white rounded-lg border p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-2">
+                    <Brain className="h-5 w-5 text-primary" />
+                    <h2 className="font-heading text-lg font-semibold">AI Gains</h2>
                   </div>
                 </div>
+                <p className="text-sm text-neutral-500 mb-4">
+                  Get personalized investment strategies based on your favorite investors' track records.
+                </p>
+                <Button 
+                  onClick={handleAiGainsClick}
+                  className="w-full bg-primary hover:bg-primary/90"
+                >
+                  Generate AI Strategy
+                </Button>
               </div>
             </div>
           </div>
@@ -118,7 +167,8 @@ const Index = () => {
               </div>
               <div className="space-y-4">
                 {filteredInvestors.map((investor, i) => (
-                  <div key={i} className="flex items-center space-x-3">
+                  <div key={i} className="flex items-center space-x-3 hover:bg-neutral-50 p-2 rounded-lg cursor-pointer"
+                       onClick={() => navigate(`/profile/${investor.name.toLowerCase().replace(' ', '-')}`)}>
                     <img src={investor.avatar} alt={investor.name} className="w-10 h-10 rounded-full" />
                     <div className="flex-1">
                       <p className="font-semibold">{investor.name}</p>
