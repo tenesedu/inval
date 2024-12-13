@@ -15,7 +15,7 @@ export const Navbar = () => {
             Inval
           </Link>
           
-          <div className="flex-1 max-w-md mx-8">
+          <div className="flex-1 max-w-md mx-auto mr-4">
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -28,9 +28,9 @@ export const Navbar = () => {
 
           <div className="flex items-center gap-2">
             <Button 
-              variant="outline" 
+              variant="default"
               size="sm"
-              className="flex items-center gap-2 text-neutral-600 hover:text-primary"
+              className="flex items-center gap-2 bg-primary text-white rounded-full hover:bg-primary-dark"
             >
               <Share className="h-4 w-4" />
               Share Investment
