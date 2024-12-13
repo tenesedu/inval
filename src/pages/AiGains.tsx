@@ -4,6 +4,20 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Brain, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+
+const INVESTMENT_SECTORS = [
+  "Tech Stocks",
+  "Crypto",
+  "Real Estate",
+  "Dividend Stocks",
+  "Forex Trading",
+  "Commodities",
+  "ESG Investments",
+  "Growth Stocks"
+];
 
 const TOP_INVESTORS = [
   { name: "Sarah Johnson", specialty: "Tech Stocks", return: 25.5 },
@@ -20,6 +34,12 @@ const AiGains = () => {
   const [selectedInvestors, setSelectedInvestors] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [strategy, setStrategy] = useState<string | null>(null);
+  const [selectedSector, setSelectedSector] = useState<string>("");
+  const [investmentAmount, setInvestmentAmount] = useState<string>("");
+
+  const filteredInvestors = TOP_INVESTORS.filter(
+    investor => selectedSector === "" || investor.specialty === selectedSector
+  );
 
   const toggleInvestor = (name: string) => {
     setSelectedInvestors(prev => 
@@ -30,27 +50,41 @@ const AiGains = () => {
   };
 
   const generateStrategy = async () => {
+    if (!selectedSector || !investmentAmount) {
+      toast.error("Por favor, selecciona un sector y especifica el monto a invertir");
+      return;
+    }
+
+    if (selectedInvestors.length < 2) {
+      toast.error("Por favor, selecciona al menos 2 inversores");
+      return;
+    }
+
     setIsGenerating(true);
     // Simulate AI strategy generation
     await new Promise(resolve => setTimeout(resolve, 2000));
     const selectedInvestorsData = TOP_INVESTORS.filter(inv => selectedInvestors.includes(inv.name));
     
-    const strategy = `Based on the analysis of your selected investors' track records:
+    const strategy = `Estrategia de Inversión Personalizada para ${selectedSector}
+Monto a invertir: $${Number(investmentAmount).toLocaleString()}
 
-1. Portfolio Allocation:
-${selectedInvestorsData.map(inv => `- ${inv.specialty}: ${Math.round(100/selectedInvestorsData.length)}%`).join('\n')}
+1. Distribución de la Inversión:
+${selectedInvestorsData.map(inv => `- Estrategia de ${inv.name}: $${(Number(investmentAmount) / selectedInvestorsData.length).toLocaleString()} (${Math.round(100/selectedInvestorsData.length)}%)`).join('\n')}
 
-2. Key Strategies:
-- Focus on diversification across ${selectedInvestorsData.map(inv => inv.specialty).join(', ')}
-- Target annual return: ${(selectedInvestorsData.reduce((acc, inv) => acc + inv.return, 0) / selectedInvestorsData.length).toFixed(1)}%
-- Regular portfolio rebalancing every quarter
-- Risk management through position sizing
+2. Estrategias Clave:
+- Sector principal: ${selectedSector}
+- Retorno anual objetivo: ${(selectedInvestorsData.reduce((acc, inv) => acc + inv.return, 0) / selectedInvestorsData.length).toFixed(1)}%
+- Rebalanceo trimestral del portafolio
+- Gestión de riesgo mediante diversificación
 
-3. Implementation Steps:
-- Start with small positions
-- Scale gradually based on performance
-- Monitor market conditions daily
-- Set stop-loss orders for risk management`;
+3. Pasos de Implementación:
+- Comenzar con posiciones pequeñas
+- Escalar gradualmente basado en el rendimiento
+- Monitoreo diario de condiciones del mercado
+- Establecer órdenes de stop-loss para gestión de riesgo
+
+4. Consideraciones Específicas para ${selectedSector}:
+${selectedInvestorsData.map(inv => `- ${inv.name}: Enfoque en retornos consistentes (${inv.return}% histórico)`).join('\n')}`;
 
     setStrategy(strategy);
     setIsGenerating(false);
@@ -64,54 +98,90 @@ ${selectedInvestorsData.map(inv => `- ${inv.specialty}: ${Math.round(100/selecte
           <CardHeader>
             <div className="flex items-center space-x-2">
               <Brain className="h-6 w-6 text-primary" />
-              <CardTitle>AI Investment Strategy Generator</CardTitle>
+              <CardTitle>Generador de Estrategias de Inversión IA</CardTitle>
             </div>
             <CardDescription>
-              Select your favorite investors to generate a personalized investment strategy based on their track records
+              Personaliza tu estrategia de inversión basada en expertos del sector
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              <div>
-                <Label className="text-lg font-semibold">Select Investors (min 2)</Label>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                  {TOP_INVESTORS.map((investor) => (
-                    <div
-                      key={investor.name}
-                      className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                        selectedInvestors.includes(investor.name)
-                          ? 'bg-primary/10 border-primary'
-                          : 'hover:bg-neutral-50'
-                      }`}
-                      onClick={() => toggleInvestor(investor.name)}
-                    >
-                      <p className="font-semibold">{investor.name}</p>
-                      <p className="text-sm text-neutral-500">{investor.specialty}</p>
-                      <p className="text-sm text-success">+{investor.return}% return</p>
-                    </div>
-                  ))}
-                </div>
+              {/* Sector Selection */}
+              <div className="space-y-2">
+                <Label>Selecciona el Sector de Inversión</Label>
+                <Select
+                  value={selectedSector}
+                  onValueChange={(value) => {
+                    setSelectedSector(value);
+                    setSelectedInvestors([]);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona un sector" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {INVESTMENT_SECTORS.map((sector) => (
+                      <SelectItem key={sector} value={sector}>
+                        {sector}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+
+              {/* Investment Amount */}
+              <div className="space-y-2">
+                <Label>Monto a Invertir ($)</Label>
+                <Input
+                  type="number"
+                  placeholder="Ingresa el monto"
+                  value={investmentAmount}
+                  onChange={(e) => setInvestmentAmount(e.target.value)}
+                />
+              </div>
+
+              {selectedSector && (
+                <div>
+                  <Label className="text-lg font-semibold">Selecciona Expertos en {selectedSector} (mínimo 2)</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                    {filteredInvestors.map((investor) => (
+                      <div
+                        key={investor.name}
+                        className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                          selectedInvestors.includes(investor.name)
+                            ? 'bg-primary/10 border-primary'
+                            : 'hover:bg-neutral-50'
+                        }`}
+                        onClick={() => toggleInvestor(investor.name)}
+                      >
+                        <p className="font-semibold">{investor.name}</p>
+                        <p className="text-sm text-neutral-500">{investor.specialty}</p>
+                        <p className="text-sm text-success">+{investor.return}% retorno</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <Button
                 className="w-full"
                 size="lg"
                 onClick={generateStrategy}
-                disabled={selectedInvestors.length < 2 || isGenerating}
+                disabled={!selectedSector || !investmentAmount || selectedInvestors.length < 2 || isGenerating}
               >
                 {isGenerating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating Strategy...
+                    Generando Estrategia...
                   </>
                 ) : (
-                  'Generate AI Strategy'
+                  'Generar Estrategia IA'
                 )}
               </Button>
 
               {strategy && (
                 <div className="mt-6 p-4 bg-neutral-50 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">Generated Strategy</h3>
+                  <h3 className="text-lg font-semibold mb-4">Estrategia Generada</h3>
                   <pre className="whitespace-pre-wrap font-mono text-sm">
                     {strategy}
                   </pre>
