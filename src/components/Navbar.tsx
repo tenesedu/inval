@@ -54,7 +54,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link to="/" className="text-xl font-bold text-primary">
+          <Link to="/" className="text-xl font-bold text-primary pl-12">
             Inval
           </Link>
           
