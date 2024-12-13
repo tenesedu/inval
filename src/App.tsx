@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
 import AiGains from "./pages/AiGains";
+import Notifications from "./pages/Notifications";
 import { MobileNavBar } from "./components/MobileNavBar";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path="/ai-gains" element={<AiGains />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Routes>
           <MobileNavBar />
         </div>

@@ -2,7 +2,6 @@ import { Home, Bot, Upload, Bell, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
-import { NotificationsDropdown } from "./NotificationsDropdown";
 
 export const MobileNavBar = () => {
   const location = useLocation();
@@ -45,14 +44,16 @@ export const MobileNavBar = () => {
           </button>
         </ShareInvestmentDialog>
 
-        <NotificationsDropdown>
-          <button 
-            className="flex flex-col items-center p-2 rounded-lg text-neutral-600"
-          >
-            <Bell size={24} />
-            <span className="text-xs mt-1">Alertas</span>
-          </button>
-        </NotificationsDropdown>
+        <Link 
+          to="/notifications" 
+          className={cn(
+            "flex flex-col items-center p-2 rounded-lg",
+            isActive("/notifications") ? "text-primary" : "text-neutral-600"
+          )}
+        >
+          <Bell size={24} />
+          <span className="text-xs mt-1">Alertas</span>
+        </Link>
 
         <Link 
           to="/profile/eduardo_fernando" 
