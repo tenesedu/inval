@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { TOP_INVESTORS } from "./constants";
 import { toast } from "sonner";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface ExpertsListProps {
   selectedSector: string;
@@ -66,8 +67,16 @@ export const ExpertsList = ({
             }`}
             onClick={() => handleInvestorClick(investor.name)}
           >
-            <p className="font-semibold">{investor.name}</p>
-            <p className="text-sm text-neutral-500">{investor.specialty}</p>
+            <div className="flex items-center gap-3 mb-2">
+              <Avatar>
+                <AvatarImage src={investor.avatar} alt={investor.name} />
+                <AvatarFallback>{investor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold">{investor.name}</p>
+                <p className="text-sm text-neutral-500">{investor.specialty}</p>
+              </div>
+            </div>
             <p className="text-sm text-neutral-500">{investor.country}</p>
             <p className="text-sm text-success">+{investor.return}% return</p>
           </div>
