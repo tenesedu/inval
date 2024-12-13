@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
-import { Search, User } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { NotificationsDropdown } from "./NotificationsDropdown";
-import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -52,12 +50,12 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between md:justify-start gap-4">
           <Link to="/" className="text-xl font-bold text-primary">
             Inval
           </Link>
           
-          <div className="flex-1 max-w-md mx-auto mr-4">
+          <div className="flex-1 max-w-md">
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -71,9 +69,8 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             </form>
           </div>
 
-          <div className="flex items-center gap-2">
-            <ShareInvestmentDialog />
-            <NotificationsDropdown />
+          {/* Desktop-only buttons */}
+          <div className="hidden md:flex items-center gap-2">
             <Button 
               variant="ghost" 
               onClick={() => navigate('/profile/eduardo_fernando')}
