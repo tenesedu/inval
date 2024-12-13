@@ -59,7 +59,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </Link>
           
           {/* Search Bar */}
-          <div className="flex-1 max-w-md">
+          <div className="flex-1 max-w-md pl-24">
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
