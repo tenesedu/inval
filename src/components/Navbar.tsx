@@ -53,13 +53,13 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          {/* Logo - aligned with Quick Stats */}
-          <Link to="/" className="text-xl font-bold text-primary pl-[16.66%]">
+          {/* Logo */}
+          <Link to="/" className="text-xl font-bold text-primary">
             Inval
           </Link>
           
-          {/* Search Bar - aligned with content below */}
-          <div className="flex-1 max-w-md pl-[25%]">
+          {/* Search Bar */}
+          <div className="flex-1 max-w-md">
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -73,8 +73,8 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             </form>
           </div>
 
-          {/* Desktop-only buttons - aligned with content width */}
-          <div className="hidden md:flex items-center gap-4 pr-[16.66%]">
+          {/* Desktop-only buttons */}
+          <div className="hidden md:flex items-center gap-4">
             <ShareInvestmentDialog>
               <Button 
                 className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg"
