@@ -330,12 +330,12 @@ ${selectedInvestorsData.map(inv =>
                     setSelectedInvestors([]);
                   }}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full bg-white">
                     <SelectValue placeholder="Selecciona un sector" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white border shadow-lg z-50">
                     {INVESTMENT_SECTORS.map((sector) => (
-                      <SelectItem key={sector} value={sector}>
+                      <SelectItem key={sector} value={sector} className="hover:bg-neutral-100">
                         {sector}
                       </SelectItem>
                     ))}
