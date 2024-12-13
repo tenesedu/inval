@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, Bell } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
+import { NotificationsDropdown } from "./NotificationsDropdown";
 
 export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[]) => void }) => {
   const navigate = useNavigate();
@@ -50,18 +52,20 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between md:justify-start gap-4">
+        <div className="flex items-center justify-between gap-4">
+          {/* Logo */}
           <Link to="/" className="text-xl font-bold text-primary">
             Inval
           </Link>
           
-          <div className="flex-1 max-w-md">
+          {/* Search Bar - Centered on desktop */}
+          <div className="flex-1 max-w-xl mx-auto">
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Search investments..."
-                className="pl-8 h-9"
+                className="pl-8 h-9 w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 disabled={isSearching}
@@ -70,7 +74,21 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Desktop-only buttons */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-4">
+            <ShareInvestmentDialog>
+              <Button 
+                className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg"
+              >
+                Share Investment
+              </Button>
+            </ShareInvestmentDialog>
+
+            <NotificationsDropdown>
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+              </Button>
+            </NotificationsDropdown>
+
             <Button 
               variant="ghost" 
               onClick={() => navigate('/profile/eduardo_fernando')}
