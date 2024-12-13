@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
-export const ShareInvestmentDialog = () => {
+export const ShareInvestmentDialog = ({ children }: { children?: React.ReactNode }) => {
   const [investment, setInvestment] = useState("");
   const [description, setDescription] = useState("");
 
@@ -32,14 +32,16 @@ export const ShareInvestmentDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button 
-          variant="default"
-          size="sm"
-          className="flex items-center gap-2 bg-purple-600 text-white rounded-full hover:bg-purple-700"
-        >
-          <Share className="h-4 w-4" />
-          Share Investment
-        </Button>
+        {children || (
+          <Button 
+            variant="default"
+            size="sm"
+            className="flex items-center gap-2 bg-purple-600 text-white rounded-full hover:bg-purple-700"
+          >
+            <Share className="h-4 w-4" />
+            Share Investment
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

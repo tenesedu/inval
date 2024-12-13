@@ -25,17 +25,19 @@ const MOCK_NOTIFICATIONS = [
   }
 ];
 
-export const NotificationsDropdown = () => {
+export const NotificationsDropdown = ({ children }: { children?: React.ReactNode }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="text-neutral-600 hover:text-primary"
-        >
-          <Bell className="h-4 w-4" />
-        </Button>
+        {children || (
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="text-neutral-600 hover:text-primary"
+          >
+            <Bell className="h-4 w-4" />
+          </Button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80 bg-white border shadow-lg z-50">
         {MOCK_NOTIFICATIONS.map((notification) => (

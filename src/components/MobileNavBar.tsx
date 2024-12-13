@@ -1,6 +1,8 @@
 import { Home, Bot, Upload, Bell, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
+import { NotificationsDropdown } from "./NotificationsDropdown";
 
 export const MobileNavBar = () => {
   const location = useLocation();
@@ -34,21 +36,23 @@ export const MobileNavBar = () => {
           <span className="text-xs mt-1">AI Gains</span>
         </Link>
 
-        <button 
-          onClick={() => document.getElementById("share-investment-dialog")?.click()}
-          className="flex flex-col items-center p-2 rounded-lg text-neutral-600"
-        >
-          <Upload size={24} />
-          <span className="text-xs mt-1">Subir</span>
-        </button>
+        <ShareInvestmentDialog>
+          <button 
+            className="flex flex-col items-center p-2 rounded-lg text-neutral-600"
+          >
+            <Upload size={24} />
+            <span className="text-xs mt-1">Subir</span>
+          </button>
+        </ShareInvestmentDialog>
 
-        <button 
-          onClick={() => document.getElementById("notifications-trigger")?.click()}
-          className="flex flex-col items-center p-2 rounded-lg text-neutral-600"
-        >
-          <Bell size={24} />
-          <span className="text-xs mt-1">Alertas</span>
-        </button>
+        <NotificationsDropdown>
+          <button 
+            className="flex flex-col items-center p-2 rounded-lg text-neutral-600"
+          >
+            <Bell size={24} />
+            <span className="text-xs mt-1">Alertas</span>
+          </button>
+        </NotificationsDropdown>
 
         <Link 
           to="/profile/eduardo_fernando" 
