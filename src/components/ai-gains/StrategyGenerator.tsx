@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { TOP_INVESTORS } from "./constants";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 
 interface StrategyGeneratorProps {
   isGenerating: boolean;
@@ -24,19 +22,6 @@ export const StrategyGenerator = ({
   onStrategyGenerated,
   onGeneratingChange
 }: StrategyGeneratorProps) => {
-  const { data: trackRecords } = useQuery({
-    queryKey: ['trackRecords'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('expert_track_records')
-        .select('*')
-        .order('operation_date', { ascending: true });
-      
-      if (error) throw error;
-      return data;
-    }
-  });
-
   const generateStrategy = async () => {
     if (!selectedSector || !investmentAmount || selectedInvestors.length === 0) {
       toast.error("Please select a sector, specify the investment amount, and choose at least one expert");
@@ -48,22 +33,12 @@ export const StrategyGenerator = ({
       console.log("Generating strategy for:", {
         sector: selectedSector,
         amount: investmentAmount,
-        investors: selectedInvestors,
-        trackRecordsCount: trackRecords?.length
+        investors: selectedInvestors
       });
 
       const selectedInvestorsData = TOP_INVESTORS.filter(inv => selectedInvestors.includes(inv.name));
-      
-      // Calculate performance metrics from track records
-      const investorPerformance = selectedInvestors.map(name => {
-        const records = trackRecords?.filter(record => record.expert_name === name) || [];
-        const averageReturn = records.reduce((acc, record) => acc + Number(record.return_percentage), 0) / (records.length || 1);
-        const latestReturn = records[records.length - 1]?.return_percentage || 0;
-        return { name, averageReturn, latestReturn };
-      });
-
-      const averageReturn = investorPerformance.reduce((acc, inv) => acc + inv.averageReturn, 0) / investorPerformance.length;
       const amountPerInvestor = Number(investmentAmount) / selectedInvestorsData.length;
+      const averageReturn = selectedInvestorsData.reduce((acc, inv) => acc + inv.return, 0) / selectedInvestorsData.length;
 
       const sectorSpecificAdvice = getSectorSpecificAdvice(selectedSector);
 
@@ -71,19 +46,13 @@ export const StrategyGenerator = ({
 Total investment amount: $${Number(investmentAmount).toLocaleString()}
 
 1. Investment Distribution:
-${selectedInvestorsData.map(inv => {
-  const performance = investorPerformance.find(p => p.name === inv.name);
-  return `- Following ${inv.name}'s strategy: $${amountPerInvestor.toLocaleString()} (${Math.round(100/selectedInvestorsData.length)}%)
-   • 6-month average return: ${performance?.averageReturn.toFixed(1)}%
-   • Latest monthly return: ${performance?.latestReturn.toFixed(1)}%`;
-}).join('\n')}
+${selectedInvestorsData.map(inv => `- Following ${inv.name}'s strategy: $${amountPerInvestor.toLocaleString()} (${Math.round(100/selectedInvestorsData.length)}%)`).join('\n')}
 
 2. Key Metrics:
 - Main sector: ${selectedSector}
 - Target annual return: ${averageReturn.toFixed(1)}%
 - Number of combined strategies: ${selectedInvestorsData.length}
 - Diversification per strategy: ${(100/selectedInvestorsData.length).toFixed(1)}%
-- Historical data period: 6+ months
 
 3. Implementation Plan:
 ${sectorSpecificAdvice}
@@ -95,14 +64,10 @@ ${sectorSpecificAdvice}
 - Daily market condition monitoring
 
 5. Strategy Breakdown:
-${selectedInvestorsData.map(inv => {
-  const performance = investorPerformance.find(p => p.name === inv.name);
-  return `- ${inv.name}:
+${selectedInvestorsData.map(inv => `- ${inv.name}:
    • Specialty: ${inv.specialty}
-   • 6-month average return: ${performance?.averageReturn.toFixed(1)}%
-   • Latest monthly return: ${performance?.latestReturn.toFixed(1)}%
-   • Allocated amount: $${amountPerInvestor.toLocaleString()}`;
-}).join('\n')}
+   • Expected return: ${inv.return}%
+   • Allocated amount: $${amountPerInvestor.toLocaleString()}`).join('\n')}
 
 6. Next Steps:
 1. Perform due diligence on each asset before investing
