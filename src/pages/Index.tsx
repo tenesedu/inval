@@ -3,6 +3,7 @@ import { Feed } from "@/components/Feed";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { RightSidebar } from "@/components/RightSidebar";
 import { SearchResults } from "@/components/SearchResults";
+import { MobileNavBar } from "@/components/MobileNavBar";
 import { useState } from "react";
 
 const Index = () => {
@@ -18,7 +19,7 @@ const Index = () => {
     <div className="min-h-screen bg-neutral-50">
       <Navbar onSearchResults={handleSearchResults} />
       
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-4 py-6 pb-24 md:pb-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Left Sidebar */}
           <div className="hidden md:block md:col-span-3">
@@ -40,6 +41,8 @@ const Index = () => {
           </div>
         </div>
       </main>
+
+      <MobileNavBar />
     </div>
   );
 };
