@@ -11,20 +11,38 @@ export type Database = {
     Tables: {
       posts: {
         Row: {
+          comments: number | null
+          content: string | null
           created_at: string
           id: string
+          investment_name: string | null
+          investment_return: number | null
+          investment_type: string | null
+          likes: number | null
           title: string
           user_id: string
         }
         Insert: {
+          comments?: number | null
+          content?: string | null
           created_at?: string
           id?: string
+          investment_name?: string | null
+          investment_return?: number | null
+          investment_type?: string | null
+          likes?: number | null
           title?: string
           user_id?: string
         }
         Update: {
+          comments?: number | null
+          content?: string | null
           created_at?: string
           id?: string
+          investment_name?: string | null
+          investment_return?: number | null
+          investment_type?: string | null
+          likes?: number | null
           title?: string
           user_id?: string
         }
