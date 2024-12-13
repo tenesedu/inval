@@ -20,6 +20,12 @@ export const ExpertsList = ({
     return matchesSector && matchesCountry;
   });
 
+  console.log("Filtered investors:", {
+    total: filteredInvestors.length,
+    sector: selectedSector,
+    country: selectedCountry
+  });
+
   return (
     <div>
       <Label className="text-lg font-semibold">

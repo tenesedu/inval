@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Brain, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { Brain } from "lucide-react";
 import { InvestmentSectorSelect } from "@/components/ai-gains/InvestmentSectorSelect";
 import { InvestmentAmountInput } from "@/components/ai-gains/InvestmentAmountInput";
 import { ExpertsList } from "@/components/ai-gains/ExpertsList";
-import { TOP_INVESTORS } from "@/components/ai-gains/constants";
 import { StrategyGenerator } from "@/components/ai-gains/StrategyGenerator";
 
 const AiGains = () => {
@@ -26,8 +23,16 @@ const AiGains = () => {
     );
   };
 
-  const showExpertsList = selectedSector && investmentAmount;
+  const showExpertsList = selectedSector !== "" && investmentAmount !== "";
   const canGenerateStrategy = showExpertsList && selectedInvestors.length > 0;
+
+  console.log("Current state:", {
+    selectedSector,
+    selectedCountry,
+    investmentAmount,
+    selectedInvestors,
+    canGenerateStrategy
+  });
 
   return (
     <div className="min-h-screen bg-neutral-50">
