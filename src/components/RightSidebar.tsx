@@ -24,23 +24,10 @@ export const RightSidebar = () => {
           : investor.specialty === selectedValue
       );
 
-  // Group investors by country and take top 5 by return for each
-  const topInvestorsByCountry = filteredInvestors.reduce((acc, investor) => {
-    if (!acc[investor.country]) {
-      acc[investor.country] = [];
-    }
-    acc[investor.country].push(investor);
-    return acc;
-  }, {} as Record<string, typeof TOP_INVESTORS>);
-
-  // Sort each country's investors by return and take top 5
-  Object.keys(topInvestorsByCountry).forEach(country => {
-    topInvestorsByCountry[country].sort((a, b) => b.return - a.return);
-    topInvestorsByCountry[country] = topInvestorsByCountry[country].slice(0, 5);
-  });
-
-  // Flatten the object back to array
-  const displayedInvestors = Object.values(topInvestorsByCountry).flat();
+  // Sort investors by return and take top 5
+  const displayedInvestors = [...filteredInvestors]
+    .sort((a, b) => b.return - a.return)
+    .slice(0, 5);
 
   return (
     <div className="bg-white rounded-lg border p-4">
