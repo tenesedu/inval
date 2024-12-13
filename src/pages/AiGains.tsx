@@ -23,15 +23,17 @@ const AiGains = () => {
     );
   };
 
-  const showExpertsList = selectedSector !== "" && investmentAmount !== "";
-  const canGenerateStrategy = showExpertsList && selectedInvestors.length > 0;
+  const showExpertsList = selectedSector !== "";
+  const canSelectExperts = investmentAmount !== "";
+  const canGenerateStrategy = showExpertsList && canSelectExperts && selectedInvestors.length > 0;
 
   console.log("Current state:", {
     selectedSector,
     selectedCountry,
     investmentAmount,
     selectedInvestors,
-    canGenerateStrategy
+    canGenerateStrategy,
+    canSelectExperts
   });
 
   return (
@@ -68,6 +70,7 @@ const AiGains = () => {
                   selectedCountry={selectedCountry}
                   selectedInvestors={selectedInvestors}
                   onToggleInvestor={toggleInvestor}
+                  canSelectExperts={canSelectExperts}
                 />
               )}
 
