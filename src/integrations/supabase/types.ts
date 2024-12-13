@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      expert_track_records: {
+        Row: {
+          created_at: string | null
+          expert_name: string
+          id: string
+          investment_amount: number
+          investment_type: string
+          operation_date: string
+          operation_details: string | null
+          return_percentage: number
+        }
+        Insert: {
+          created_at?: string | null
+          expert_name: string
+          id?: string
+          investment_amount: number
+          investment_type: string
+          operation_date: string
+          operation_details?: string | null
+          return_percentage: number
+        }
+        Update: {
+          created_at?: string | null
+          expert_name?: string
+          id?: string
+          investment_amount?: number
+          investment_type?: string
+          operation_date?: string
+          operation_details?: string | null
+          return_percentage?: number
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           comments: number | null
