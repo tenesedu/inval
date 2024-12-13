@@ -15,24 +15,33 @@ export const Navbar = () => {
             Inval
           </Link>
           
-          <div className="flex-1 max-w-xl mx-8">
+          <div className="flex-1 max-w-md mx-8">
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Search investments..."
-                className="pl-8"
+                className="pl-8 h-9"
               />
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <Share className="h-5 w-5" />
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-2 text-neutral-600 hover:text-primary"
+            >
+              <Share className="h-4 w-4" />
+              Share Investment
             </Button>
             
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-neutral-600 hover:text-primary"
+            >
+              <Bell className="h-4 w-4" />
             </Button>
             
             <Button 
