@@ -1,58 +1,60 @@
 import { useParams } from "react-router-dom";
 import { Post } from "@/components/Post";
 import { TrendingUp, Users, Award } from "lucide-react";
+import { Navbar } from "@/components/Navbar";
 
 const MOCK_POSTS = [
   {
     user: {
-      name: "Sarah Johnson",
+      name: "Eduardo Fernando",
       avatar: "/placeholder.svg",
-      username: "sarahj",
+      username: "eduardo_fernando",
     },
-    content: "Just increased my position in tech stocks. The AI sector is showing strong growth potential.",
+    content: "Long-term investment strategies have consistently proven their worth. Focus on fundamentals, not market noise. 📈",
     investment: {
-      type: "Tech Stocks",
-      name: "NVDA",
-      return: 45.2,
+      type: "Portfolio Strategy",
+      name: "Long-term Growth",
+      return: 15.7,
     },
-    timestamp: "2h ago",
-    likes: 234,
-    comments: 18,
+    timestamp: "1d ago",
+    likes: 142,
+    comments: 28,
   },
   {
     user: {
-      name: "Sarah Johnson",
+      name: "Eduardo Fernando",
       avatar: "/placeholder.svg",
-      username: "sarahj",
+      username: "eduardo_fernando",
     },
-    content: "My analysis suggests a bullish trend in semiconductor stocks for Q2 2024.",
+    content: "Tech sector analysis: AI companies showing strong growth potential for 2024. Keep an eye on semiconductor manufacturers.",
     investment: {
-      type: "Tech Analysis",
-      name: "Semiconductor Sector",
-      return: 28.5,
+      type: "Tech Stocks",
+      name: "AI Sector",
+      return: 22.3,
     },
-    timestamp: "1d ago",
+    timestamp: "3d ago",
     likes: 189,
-    comments: 24,
+    comments: 45,
   },
 ];
 
 const Profile = () => {
   const { username } = useParams();
-  // In a real app, we would fetch the user data based on the username
   const user = {
-    name: "Sarah Johnson",
+    name: "Eduardo Fernando",
     avatar: "/placeholder.svg",
-    username: "sarahj",
-    country: "USA",
-    specialty: "Tech Stocks",
-    return: 25.5,
-    followers: 1234,
-    following: 321,
+    username: "eduardo_fernando",
+    bio: "Passionate investor focused on long-term growth opportunities.",
+    stats: {
+      totalReturn: 25.5,
+      followers: 1234,
+      ranking: 42,
+    },
   };
 
   return (
     <div className="min-h-screen bg-neutral-50">
+      <Navbar />
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-lg border p-6 mb-6">
           <div className="flex items-center space-x-4 mb-6">
@@ -60,35 +62,31 @@ const Profile = () => {
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
               <p className="text-neutral-500">@{user.username}</p>
-              <div className="flex items-center space-x-4 mt-2">
-                <span className="text-sm">{user.country}</span>
-                <span className="text-sm text-success">+{user.return}% return</span>
-                <span className="text-sm">{user.specialty}</span>
-              </div>
+              <p className="mt-2">{user.bio}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-3 gap-4">
             <div className="bg-neutral-50 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
                 <span className="font-semibold">Total Return</span>
               </div>
-              <p className="text-2xl font-bold text-success">+{user.return}%</p>
+              <p className="text-2xl font-bold text-success">+{user.stats.totalReturn}%</p>
             </div>
             <div className="bg-neutral-50 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <Users className="h-5 w-5 text-primary" />
                 <span className="font-semibold">Followers</span>
               </div>
-              <p className="text-2xl font-bold">{user.followers}</p>
+              <p className="text-2xl font-bold">{user.stats.followers}</p>
             </div>
             <div className="bg-neutral-50 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <Award className="h-5 w-5 text-primary" />
-                <span className="font-semibold">Following</span>
+                <span className="font-semibold">Ranking</span>
               </div>
-              <p className="text-2xl font-bold">{user.following}</p>
+              <p className="text-2xl font-bold">#{user.stats.ranking}</p>
             </div>
           </div>
         </div>
