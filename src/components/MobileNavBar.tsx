@@ -21,7 +21,7 @@ export const MobileNavBar = () => {
           )}
         >
           <Home size={24} />
-          <span className="text-xs mt-1">Inicio</span>
+          <span className="text-xs mt-1">Home</span>
         </Link>
 
         <Link 
@@ -40,7 +40,7 @@ export const MobileNavBar = () => {
             className="flex flex-col items-center p-2 rounded-lg text-neutral-600"
           >
             <Upload size={24} />
-            <span className="text-xs mt-1">Subir</span>
+            <span className="text-xs mt-1">Upload</span>
           </button>
         </ShareInvestmentDialog>
 
@@ -52,7 +52,7 @@ export const MobileNavBar = () => {
           )}
         >
           <Bell size={24} />
-          <span className="text-xs mt-1">Alertas</span>
+          <span className="text-xs mt-1">Alerts</span>
         </Link>
 
         <Link 
@@ -63,7 +63,7 @@ export const MobileNavBar = () => {
           )}
         >
           <User size={24} />
-          <span className="text-xs mt-1">Perfil</span>
+          <span className="text-xs mt-1">Profile</span>
         </Link>
       </div>
     </div>

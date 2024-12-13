@@ -23,7 +23,7 @@ const Notifications = () => {
     <div className="container mx-auto px-4 py-6">
       <div className="flex items-center gap-2 mb-6">
         <Bell className="h-6 w-6 text-primary" />
-        <h1 className="text-2xl font-bold">Notificaciones</h1>
+        <h1 className="text-2xl font-bold">Notifications</h1>
       </div>
       
       <div className="space-y-4">
