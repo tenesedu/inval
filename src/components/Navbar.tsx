@@ -74,7 +74,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Desktop-only buttons */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 pr-32">
             <ShareInvestmentDialog>
               <Button 
                 className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg"
