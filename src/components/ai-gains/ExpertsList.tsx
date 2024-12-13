@@ -1,23 +1,30 @@
+import { Label } from "@/components/ui/label";
 import { TOP_INVESTORS } from "./constants";
 
 interface ExpertsListProps {
   selectedSector: string;
+  selectedCountry: string;
   selectedInvestors: string[];
   onToggleInvestor: (name: string) => void;
 }
 
 export const ExpertsList = ({
   selectedSector,
+  selectedCountry,
   selectedInvestors,
   onToggleInvestor
 }: ExpertsListProps) => {
-  const filteredInvestors = TOP_INVESTORS.filter(
-    investor => selectedSector === "" || investor.specialty === selectedSector
-  );
+  const filteredInvestors = TOP_INVESTORS.filter(investor => {
+    const matchesSector = selectedSector === "" || investor.specialty === selectedSector;
+    const matchesCountry = selectedCountry === "All Countries" || selectedCountry === "" || investor.country === selectedCountry;
+    return matchesSector && matchesCountry;
+  });
 
   return (
     <div>
-      <Label className="text-lg font-semibold">Select Experts in {selectedSector} (minimum 2)</Label>
+      <Label className="text-lg font-semibold">
+        Select Experts in {selectedSector} {selectedCountry !== "All Countries" && selectedCountry !== "" ? `from ${selectedCountry}` : ""} (minimum 2)
+      </Label>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         {filteredInvestors.map((investor) => (
           <div
@@ -31,6 +38,7 @@ export const ExpertsList = ({
           >
             <p className="font-semibold">{investor.name}</p>
             <p className="text-sm text-neutral-500">{investor.specialty}</p>
+            <p className="text-sm text-neutral-500">{investor.country}</p>
             <p className="text-sm text-success">+{investor.return}% return</p>
           </div>
         ))}

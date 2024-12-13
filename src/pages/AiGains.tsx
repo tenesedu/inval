@@ -14,6 +14,7 @@ const AiGains = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [strategy, setStrategy] = useState<string | null>(null);
   const [selectedSector, setSelectedSector] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string>("All Countries");
   const [investmentAmount, setInvestmentAmount] = useState<string>("");
 
   const toggleInvestor = (name: string) => {
@@ -171,7 +172,9 @@ ${selectedInvestorsData.map(inv =>
             <div className="space-y-6">
               <InvestmentSectorSelect
                 selectedSector={selectedSector}
+                selectedCountry={selectedCountry}
                 onSectorChange={setSelectedSector}
+                onCountryChange={setSelectedCountry}
               />
 
               <InvestmentAmountInput
@@ -182,6 +185,7 @@ ${selectedInvestorsData.map(inv =>
               {selectedSector && (
                 <ExpertsList
                   selectedSector={selectedSector}
+                  selectedCountry={selectedCountry}
                   selectedInvestors={selectedInvestors}
                   onToggleInvestor={toggleInvestor}
                 />
