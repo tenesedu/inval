@@ -53,13 +53,13 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          {/* Logo */}
-          <Link to="/" className="text-xl font-bold text-primary">
+          {/* Logo - moved slightly right with pl-4 */}
+          <Link to="/" className="text-xl font-bold text-primary pl-4">
             Inval
           </Link>
           
-          {/* Search Bar - Centered on desktop */}
-          <div className="flex-1 max-w-xl mx-auto">
+          {/* Search Bar - Adjusted position and width */}
+          <div className="flex-1 max-w-md ml-auto mr-8">
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
