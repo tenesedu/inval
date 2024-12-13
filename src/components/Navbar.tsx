@@ -7,20 +7,46 @@ import { useState } from "react";
 import { NotificationsDropdown } from "./NotificationsDropdown";
 import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
-export const Navbar = () => {
+export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[]) => void }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
       toast.error("Please enter a search term");
       return;
     }
-    // Here you would typically handle the search
-    console.log("Searching for:", searchQuery);
-    toast.success(`Searching for ${searchQuery}`);
+
+    setIsSearching(true);
+    try {
+      const { data, error } = await supabase
+        .rpc('search_posts', {
+          search_query: searchQuery.trim()
+        });
+
+      if (error) {
+        console.error('Search error:', error);
+        toast.error("An error occurred while searching");
+        return;
+      }
+
+      if (onSearchResults) {
+        onSearchResults(data || []);
+      }
+
+      if (!data || data.length === 0) {
+        toast.info("No results found");
+      }
+    } catch (err) {
+      console.error('Search error:', err);
+      toast.error("An error occurred while searching");
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
@@ -40,6 +66,7 @@ export const Navbar = () => {
                 className="pl-8 h-9"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                disabled={isSearching}
               />
             </form>
           </div>
