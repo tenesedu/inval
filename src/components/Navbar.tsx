@@ -1,11 +1,27 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
-import { Search, Share, Bell, User } from "lucide-react";
+import { Search, User } from "lucide-react";
 import { Input } from "./ui/input";
+import { useState } from "react";
+import { NotificationsDropdown } from "./NotificationsDropdown";
+import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
+import { toast } from "sonner";
 
 export const Navbar = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      toast.error("Please enter a search term");
+      return;
+    }
+    // Here you would typically handle the search
+    console.log("Searching for:", searchQuery);
+    toast.success(`Searching for ${searchQuery}`);
+  };
 
   return (
     <nav className="border-b bg-white">
@@ -16,34 +32,21 @@ export const Navbar = () => {
           </Link>
           
           <div className="flex-1 max-w-md mx-auto mr-4">
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Search investments..."
                 className="pl-8 h-9"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </div>
+            </form>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button 
-              variant="default"
-              size="sm"
-              className="flex items-center gap-2 bg-primary text-white rounded-full hover:bg-primary-dark"
-            >
-              <Share className="h-4 w-4" />
-              Share Investment
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="text-neutral-600 hover:text-primary"
-            >
-              <Bell className="h-4 w-4" />
-            </Button>
-            
+            <ShareInvestmentDialog />
+            <NotificationsDropdown />
             <Button 
               variant="ghost" 
               onClick={() => navigate('/profile/eduardo_fernando')}
