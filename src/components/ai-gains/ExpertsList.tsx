@@ -23,7 +23,7 @@ export const ExpertsList = ({
   return (
     <div>
       <Label className="text-lg font-semibold">
-        Select Experts in {selectedSector} {selectedCountry !== "All Countries" && selectedCountry !== "" ? `from ${selectedCountry}` : ""} (minimum 2)
+        Select Experts in {selectedSector} {selectedCountry !== "All Countries" && selectedCountry !== "" ? `from ${selectedCountry}` : ""}
       </Label>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         {filteredInvestors.map((investor) => (
