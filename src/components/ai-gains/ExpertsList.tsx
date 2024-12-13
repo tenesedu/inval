@@ -31,12 +31,13 @@ export const ExpertsList = ({
     onToggleInvestor(name);
   };
 
-  console.log("Filtered investors:", {
-    total: filteredInvestors.length,
-    sector: selectedSector,
-    country: selectedCountry,
-    canSelectExperts
-  });
+  if (filteredInvestors.length === 0) {
+    return (
+      <div className="text-center py-4">
+        <p className="text-neutral-500">No experts found for the selected criteria</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -48,12 +49,12 @@ export const ExpertsList = ({
         {filteredInvestors.map((investor) => (
           <div
             key={investor.name}
-            className={`p-4 rounded-lg border transition-colors ${
+            className={`p-4 rounded-lg border cursor-pointer transition-colors ${
               selectedInvestors.includes(investor.name)
                 ? 'bg-primary/10 border-primary'
-                : canSelectExperts 
-                  ? 'hover:bg-neutral-50 cursor-pointer'
-                  : 'opacity-50 cursor-not-allowed'
+                : !canSelectExperts 
+                  ? 'opacity-50 hover:bg-neutral-100/50'
+                  : 'hover:bg-neutral-100'
             }`}
             onClick={() => handleInvestorClick(investor.name)}
           >
