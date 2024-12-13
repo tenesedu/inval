@@ -42,7 +42,7 @@ export const RightSidebar = () => {
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Filter by" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border shadow-lg z-50">
               <SelectItem value="country">Country</SelectItem>
               <SelectItem value="specialty">Investment Sector</SelectItem>
             </SelectContent>
@@ -52,7 +52,7 @@ export const RightSidebar = () => {
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder={`Select ${filterType}`} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border shadow-lg z-50">
               {filterOptions[filterType].map((option) => (
                 <SelectItem key={option} value={option}>
                   {option === "all" ? `All ${filterType === "country" ? "Countries" : "Sectors"}` : option}

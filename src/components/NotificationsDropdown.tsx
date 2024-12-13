@@ -37,9 +37,9 @@ export const NotificationsDropdown = () => {
           <Bell className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80">
+      <DropdownMenuContent align="end" className="w-80 bg-white border shadow-lg z-50">
         {MOCK_NOTIFICATIONS.map((notification) => (
-          <DropdownMenuItem key={notification.id} className="p-3 cursor-pointer">
+          <DropdownMenuItem key={notification.id} className="p-3 cursor-pointer hover:bg-neutral-100">
             <div>
               <p className="text-sm">{notification.message}</p>
               <p className="text-xs text-neutral-500 mt-1">{notification.time}</p>
