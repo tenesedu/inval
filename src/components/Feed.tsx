@@ -24,16 +24,6 @@ type PostWithProfile = {
 const POSTS_PER_PAGE = 5;
 
 export const Feed = () => {
-<<<<<<< HEAD
-  const {
-    data: posts,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["posts"],
-    queryFn: async () => {
-      console.log("Fetching posts...");
-=======
   const { ref, inView } = useInView();
 
   const {
@@ -44,13 +34,12 @@ export const Feed = () => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ['posts'],
+    queryKey: ["posts"],
     queryFn: async ({ pageParam = 0 }) => {
-      console.log('Fetching posts page:', pageParam);
+      console.log("Fetching posts page:", pageParam);
       const from = Number(pageParam) * POSTS_PER_PAGE;
       const to = from + POSTS_PER_PAGE - 1;
 
->>>>>>> 6d7e4344368fcaf402063a285818a26b77871793
       const { data, error } = await supabase
         .from("posts")
         .select(
@@ -61,15 +50,10 @@ export const Feed = () => {
             avatar,
             username
           )
-<<<<<<< HEAD
         `
         )
-        .order("created_at", { ascending: false });
-=======
-        `)
-        .order('created_at', { ascending: false })
+        .order("created_at", { ascending: false })
         .range(from, to);
->>>>>>> 6d7e4344368fcaf402063a285818a26b77871793
 
       if (error) {
         console.error("Error fetching posts:", error);
@@ -84,7 +68,7 @@ export const Feed = () => {
     getNextPageParam: (lastPage, allPages) => {
       return lastPage?.length === POSTS_PER_PAGE ? allPages.length : undefined;
     },
-    initialPageParam: 0
+    initialPageParam: 0,
   });
 
   useEffect(() => {
@@ -129,40 +113,18 @@ export const Feed = () => {
               return null;
             }
 
-<<<<<<< HEAD
-        return (
-          <Post
-            key={post.id}
-            user={{
-              name: post.profiles.name,
-              avatar: post.profiles.avatar || "/placeholder.svg",
-              username: post.profiles.username,
-            }}
-            content={post.content}
-            investment={{
-              type: post.investment_type,
-              name: post.investment_name,
-              return: post.investment_return,
-            }}
-            timestamp={new Date(post.created_at).toLocaleString()}
-            likes={post.likes}
-            comments={post.comments}
-          />
-        );
-      })}
-=======
             return (
               <Post
                 key={post.id}
                 user={{
                   name: post.profiles.name,
-                  avatar: post.profiles.avatar || '/placeholder.svg',
+                  avatar: post.profiles.avatar || "/placeholder.svg",
                   username: post.profiles.username,
                 }}
-                content={post.content || ''}
+                content={post.content || ""}
                 investment={{
-                  type: post.investment_type || '',
-                  name: post.investment_name || '',
+                  type: post.investment_type || "",
+                  name: post.investment_name || "",
                   return: post.investment_return || 0,
                 }}
                 timestamp={new Date(post.created_at).toLocaleString()}
@@ -173,7 +135,7 @@ export const Feed = () => {
           })}
         </div>
       ))}
-      
+
       <div ref={ref} className="h-10">
         {isFetchingNextPage && (
           <div className="text-center p-4">
@@ -183,7 +145,6 @@ export const Feed = () => {
           </div>
         )}
       </div>
->>>>>>> 6d7e4344368fcaf402063a285818a26b77871793
     </div>
   );
 };
