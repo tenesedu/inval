@@ -82,7 +82,7 @@ export const Feed = () => {
     );
   }
 
-  if (status === "loading") {
+  if (status === "pending") {
     return (
       <div className="space-y-4">
         <div className="animate-pulse">
