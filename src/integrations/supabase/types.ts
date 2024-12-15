@@ -19,6 +19,7 @@ export type Database = {
           investment_return: number | null
           investment_type: string | null
           likes: number | null
+          profile_id: string | null
         }
         Insert: {
           comments?: number | null
@@ -29,6 +30,7 @@ export type Database = {
           investment_return?: number | null
           investment_type?: string | null
           likes?: number | null
+          profile_id?: string | null
         }
         Update: {
           comments?: number | null
@@ -39,8 +41,17 @@ export type Database = {
           investment_return?: number | null
           investment_type?: string | null
           likes?: number | null
+          profile_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "posts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -87,7 +98,7 @@ export type Database = {
           likes: number
           comments: number
           created_at: string
-          user_id: string
+          profile_id: string
           user_name: string
           user_username: string
           user_avatar: string
