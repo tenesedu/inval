@@ -17,12 +17,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <Navbar onSearchResults={handleSearchResults} />
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Navbar onSearchResults={handleSearchResults} />
+      </div>
       
-      <main className="container mx-auto px-4 py-6 pb-24 md:pb-6">
+      <main className="container mx-auto px-4 py-6 pb-24 md:pb-6 mt-20">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Left Sidebar */}
-          <div className="hidden md:block md:col-span-3">
+          <div className="hidden md:block md:col-span-3 sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
             <LeftSidebar />
           </div>
           
@@ -36,7 +38,7 @@ const Index = () => {
           </div>
           
           {/* Right Sidebar */}
-          <div className="hidden md:block md:col-span-3">
+          <div className="hidden md:block md:col-span-3 sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
             <RightSidebar />
           </div>
         </div>
