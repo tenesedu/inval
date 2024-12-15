@@ -1,9 +1,10 @@
 import { Post } from "./Post";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const Feed = () => {
-  const { data: posts, isLoading } = useQuery({
+  const { data: posts, isLoading, error } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
       console.log('Fetching posts...');
@@ -29,6 +30,15 @@ export const Feed = () => {
     },
   });
 
+  if (error) {
+    toast.error("Failed to load posts");
+    return (
+      <div className="text-center p-4 text-red-500">
+        Failed to load posts. Please try again later.
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -47,25 +57,33 @@ export const Feed = () => {
 
   return (
     <div className="space-y-4">
-      {posts?.map((post) => (
-        <Post
-          key={post.id}
-          user={{
-            name: post.profiles.name,
-            avatar: post.profiles.avatar,
-            username: post.profiles.username,
-          }}
-          content={post.content}
-          investment={{
-            type: post.investment_type,
-            name: post.investment_name,
-            return: post.investment_return,
-          }}
-          timestamp={new Date(post.created_at).toLocaleString()}
-          likes={post.likes}
-          comments={post.comments}
-        />
-      ))}
+      {posts?.map((post) => {
+        // Skip posts with missing profile data
+        if (!post.profiles) {
+          console.warn(`Post ${post.id} has missing profile data`);
+          return null;
+        }
+
+        return (
+          <Post
+            key={post.id}
+            user={{
+              name: post.profiles.name,
+              avatar: post.profiles.avatar || '/placeholder.svg',
+              username: post.profiles.username,
+            }}
+            content={post.content}
+            investment={{
+              type: post.investment_type,
+              name: post.investment_name,
+              return: post.investment_return,
+            }}
+            timestamp={new Date(post.created_at).toLocaleString()}
+            likes={post.likes}
+            comments={post.comments}
+          />
+        );
+      })}
     </div>
   );
 };
