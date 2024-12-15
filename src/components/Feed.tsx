@@ -18,7 +18,7 @@ type PostWithProfile = {
     name: string;
     avatar: string | null;
     username: string;
-  } | null;
+  };
 };
 
 const POSTS_PER_PAGE = 5;
@@ -60,10 +60,8 @@ export const Feed = () => {
         throw error;
       }
 
-      console.log(data);
-
       console.log("Posts fetched:", data);
-      return data as unknown as PostWithProfile[];
+      return data as PostWithProfile[];
     },
     getNextPageParam: (lastPage, allPages) => {
       return lastPage?.length === POSTS_PER_PAGE ? allPages.length : undefined;
