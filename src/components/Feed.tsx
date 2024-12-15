@@ -61,7 +61,7 @@ export const Feed = () => {
       }
 
       console.log("Posts fetched:", data);
-      return data as PostWithProfile[];
+      return data as unknown as PostWithProfile[];
     },
     getNextPageParam: (lastPage, allPages) => {
       return lastPage?.length === POSTS_PER_PAGE ? allPages.length : undefined;
