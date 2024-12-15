@@ -19,7 +19,6 @@ export type Database = {
           investment_return: number | null
           investment_type: string | null
           likes: number | null
-          user_id: string
         }
         Insert: {
           comments?: number | null
@@ -30,7 +29,6 @@ export type Database = {
           investment_return?: number | null
           investment_type?: string | null
           likes?: number | null
-          user_id?: string
         }
         Update: {
           comments?: number | null
@@ -41,7 +39,6 @@ export type Database = {
           investment_return?: number | null
           investment_type?: string | null
           likes?: number | null
-          user_id?: string
         }
         Relationships: []
       }
