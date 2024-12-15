@@ -19,7 +19,6 @@ export type Database = {
           investment_return: number | null
           investment_type: string | null
           likes: number | null
-          title: string
           user_id: string
         }
         Insert: {
@@ -31,7 +30,6 @@ export type Database = {
           investment_return?: number | null
           investment_type?: string | null
           likes?: number | null
-          title?: string
           user_id?: string
         }
         Update: {
@@ -43,7 +41,6 @@ export type Database = {
           investment_return?: number | null
           investment_type?: string | null
           likes?: number | null
-          title?: string
           user_id?: string
         }
         Relationships: []
@@ -75,27 +72,6 @@ export type Database = {
           name?: string
           user_id?: string | null
           username?: string
-        }
-        Relationships: []
-      }
-      users: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          is_active: boolean
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          is_active?: boolean
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          is_active?: boolean
         }
         Relationships: []
       }
