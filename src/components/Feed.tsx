@@ -37,7 +37,7 @@ export const Feed = () => {
     queryKey: ['posts'],
     queryFn: async ({ pageParam = 0 }) => {
       console.log('Fetching posts page:', pageParam);
-      const from = pageParam * POSTS_PER_PAGE;
+      const from = Number(pageParam) * POSTS_PER_PAGE;
       const to = from + POSTS_PER_PAGE - 1;
 
       const { data, error } = await supabase
@@ -64,6 +64,7 @@ export const Feed = () => {
     getNextPageParam: (lastPage, allPages) => {
       return lastPage?.length === POSTS_PER_PAGE ? allPages.length : undefined;
     },
+    initialPageParam: 0
   });
 
   useEffect(() => {
@@ -100,33 +101,35 @@ export const Feed = () => {
   return (
     <div className="space-y-4">
       {data?.pages.map((page, i) => (
-        page.map((post) => {
-          // Skip posts with missing profile data
-          if (!post.profiles) {
-            console.warn(`Post ${post.id} has missing profile data`);
-            return null;
-          }
+        <div key={i}>
+          {page.map((post) => {
+            // Skip posts with missing profile data
+            if (!post.profiles) {
+              console.warn(`Post ${post.id} has missing profile data`);
+              return null;
+            }
 
-          return (
-            <Post
-              key={post.id}
-              user={{
-                name: post.profiles.name,
-                avatar: post.profiles.avatar || '/placeholder.svg',
-                username: post.profiles.username,
-              }}
-              content={post.content}
-              investment={{
-                type: post.investment_type,
-                name: post.investment_name,
-                return: post.investment_return,
-              }}
-              timestamp={new Date(post.created_at).toLocaleString()}
-              likes={post.likes}
-              comments={post.comments}
-            />
-          );
-        })
+            return (
+              <Post
+                key={post.id}
+                user={{
+                  name: post.profiles.name,
+                  avatar: post.profiles.avatar || '/placeholder.svg',
+                  username: post.profiles.username,
+                }}
+                content={post.content || ''}
+                investment={{
+                  type: post.investment_type || '',
+                  name: post.investment_name || '',
+                  return: post.investment_return || 0,
+                }}
+                timestamp={new Date(post.created_at).toLocaleString()}
+                likes={post.likes || 0}
+                comments={post.comments || 0}
+              />
+            );
+          })}
+        </div>
       ))}
       
       <div ref={ref} className="h-10">
