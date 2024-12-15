@@ -3,6 +3,22 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type PostWithProfile = {
+  id: string;
+  content: string | null;
+  investment_type: string | null;
+  investment_name: string | null;
+  investment_return: number | null;
+  likes: number | null;
+  comments: number | null;
+  created_at: string;
+  profiles: {
+    name: string;
+    avatar: string | null;
+    username: string;
+  } | null;
+}
+
 export const Feed = () => {
   const { data: posts, isLoading, error } = useQuery({
     queryKey: ['posts'],
@@ -26,7 +42,7 @@ export const Feed = () => {
       }
 
       console.log('Posts fetched:', data);
-      return data;
+      return data as PostWithProfile[];
     },
   });
 
