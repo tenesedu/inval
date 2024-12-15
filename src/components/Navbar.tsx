@@ -52,14 +52,16 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 relative">
           {/* Logo */}
-          <Link to="/" className="text-xl font-bold text-primary pl-24">
-            Inval
-          </Link>
+          <div className="w-[100px] flex-shrink-0">
+            <Link to="/" className="text-xl font-bold text-primary">
+              Inval
+            </Link>
+          </div>
           
           {/* Search Bar */}
-          <div className="flex-1 max-w-md pl-24">
+          <div className="flex-1 max-w-md">
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -74,17 +76,17 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Desktop-only buttons */}
-          <div className="hidden md:flex items-center gap-4 pr-32">
+          <div className="hidden md:flex items-center gap-4 flex-shrink-0">
             <ShareInvestmentDialog>
               <Button 
-                className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg"
+                className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
               >
                 Share Investment
               </Button>
             </ShareInvestmentDialog>
 
             <NotificationsDropdown>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative flex-shrink-0">
                 <Bell className="h-5 w-5" />
               </Button>
             </NotificationsDropdown>
@@ -92,14 +94,14 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             <Button 
               variant="ghost" 
               onClick={() => navigate('/profile/eduardo_fernando')}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 flex-shrink-0"
             >
               <img 
                 src="/placeholder.svg" 
                 alt="Eduardo Fernando" 
                 className="w-8 h-8 rounded-full"
               />
-              <span>Eduardo Fernando</span>
+              <span className="whitespace-nowrap">Eduardo Fernando</span>
             </Button>
           </div>
         </div>
