@@ -17,32 +17,40 @@ type PostWithProfile = {
     avatar: string | null;
     username: string;
   } | null;
-}
+};
 
 export const Feed = () => {
-  const { data: posts, isLoading, error } = useQuery({
-    queryKey: ['posts'],
+  const {
+    data: posts,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["posts"],
     queryFn: async () => {
-      console.log('Fetching posts...');
+      console.log("Fetching posts...");
       const { data, error } = await supabase
-        .from('posts')
-        .select(`
+        .from("posts")
+        .select(
+          `
           *,
           profiles:profile_id (
             name,
             avatar,
             username
           )
-        `)
-        .order('created_at', { ascending: false });
+        `
+        )
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.error('Error fetching posts:', error);
+        console.error("Error fetching posts:", error);
         throw error;
       }
 
-      console.log('Posts fetched:', data);
-      return data as PostWithProfile[];
+      console.log(data);
+
+      console.log("Posts fetched:", data);
+      return data as unknown as PostWithProfile[];
     },
   });
 
@@ -85,7 +93,7 @@ export const Feed = () => {
             key={post.id}
             user={{
               name: post.profiles.name,
-              avatar: post.profiles.avatar || '/placeholder.svg',
+              avatar: post.profiles.avatar || "/placeholder.svg",
               username: post.profiles.username,
             }}
             content={post.content}
