@@ -30,7 +30,7 @@ export const RightSidebar = () => {
     .slice(0, 5);
 
   return (
-    <div className="bg-white rounded-lg border p-4">
+    <div className="bg-white rounded-lg border p-4 overflow-y-scroll scrollbar-hide" style={{ width: '100%', maxHeight: 'calc(100vh - 6rem)' }}>
       <div className="flex flex-col gap-4 mb-4">
         <h2 className="font-heading text-lg font-semibold">Top Investors</h2>
         
