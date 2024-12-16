@@ -63,14 +63,14 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="w-[100px]">
+          <div className="w-[180px]">
             <Link to="/" className="text-xl font-bold text-primary">
               Inval
             </Link>
           </div>
 
           {/* Center Container */}
-          <div className="flex items-center gap-4 max-w-2xl ml-46">
+          <div className="flex items-center gap-4 max-w-xl ml-80">
             {/* Search Bar */}
             <div className="w-[400px]">
               <form onSubmit={handleSearch} className="relative w-full">
@@ -87,7 +87,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             </div>
 
             {/* Share Investment Button */}
-            <div className="hidden md:block">
+            <div className="hidden md:block ml-6">
               <ShareInvestmentDialog>
                 <Button 
                   className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
