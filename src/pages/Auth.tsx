@@ -12,17 +12,7 @@ const Auth = () => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("name, username")
-          .eq("user_id", session.user.id)
-          .single();
-
-        if (profile?.name && profile?.username) {
-          navigate("/");
-        } else {
-          navigate("/profile-setup");
-        }
+        navigate("/");
       }
     };
 
@@ -39,17 +29,17 @@ const Auth = () => {
               .from("profiles")
               .select("id")
               .eq("user_id", session.user.id)
-              .maybeSingle(); // Use maybeSingle() instead of single() to avoid 406 error
+              .maybeSingle();
 
             if (!existingProfile) {
-              // Create initial profile record with just the user_id
+              // Create complete profile record
               const { error: insertError } = await supabase
                 .from("profiles")
                 .insert({
-                  id: crypto.randomUUID(), // Generate a new UUID for the profile
+                  id: crypto.randomUUID(),
                   user_id: session.user.id,
-                  name: '',
-                  username: '',
+                  name: session.user.email?.split('@')[0] || 'User',
+                  username: `user_${session.user.id.split('-')[0]}`,
                   created_at: new Date().toISOString()
                 });
 
@@ -64,7 +54,7 @@ const Auth = () => {
               console.log("Profile already exists");
             }
             
-            navigate("/profile-setup");
+            navigate("/");
           } catch (error) {
             console.error("Unexpected error:", error);
             toast.error("An unexpected error occurred. Please try again.");
