@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useNavigate } from "react-router-dom";
-import { Search, Bell } from "lucide-react";
+import { Search, Bell, LogOut } from "lucide-react";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -46,6 +45,16 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
       toast.error("An error occurred while searching");
     } finally {
       setIsSearching(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/auth');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      toast.error("Failed to log out");
     }
   };
 
@@ -102,6 +111,15 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
                 className="w-8 h-8 rounded-full"
               />
               <span className="whitespace-nowrap">Eduardo Fernando</span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="flex-shrink-0"
+            >
+              <LogOut className="h-5 w-5" />
             </Button>
           </div>
         </div>
