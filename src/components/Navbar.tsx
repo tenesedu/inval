@@ -61,17 +61,18 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-4 relative">
+        <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="w-[100px] flex-shrink-0">
             <Link to="/" className="text-xl font-bold text-primary">
               Inval
             </Link>
           </div>
-          
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md">
-            <form onSubmit={handleSearch} className="relative">
+
+          {/* Center Container */}
+          <div className="flex-1 flex justify-center items-center gap-4 max-w-3xl mx-auto">
+            {/* Search Bar */}
+            <form onSubmit={handleSearch} className="relative flex-1 max-w-md">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
@@ -82,18 +83,21 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
                 disabled={isSearching}
               />
             </form>
+
+            {/* Share Investment Button */}
+            <div className="hidden md:block">
+              <ShareInvestmentDialog>
+                <Button 
+                  className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
+                >
+                  Share Investment
+                </Button>
+              </ShareInvestmentDialog>
+            </div>
           </div>
 
-          {/* Desktop-only buttons */}
+          {/* Right Side Actions */}
           <div className="hidden md:flex items-center gap-4 flex-shrink-0">
-            <ShareInvestmentDialog>
-              <Button 
-                className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
-              >
-                Share Investment
-              </Button>
-            </ShareInvestmentDialog>
-
             <NotificationsDropdown>
               <Button variant="ghost" size="icon" className="relative flex-shrink-0">
                 <Bell className="h-5 w-5" />
