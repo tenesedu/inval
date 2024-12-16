@@ -10,23 +10,38 @@ import Profile from "./pages/Profile";
 import AiGains from "./pages/AiGains";
 import Notifications from "./pages/Notifications";
 import Auth from "./pages/Auth";
+import ProfileSetup from "./pages/ProfileSetup";
 import { MobileNavBar } from "./components/MobileNavBar";
 
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
+
+      if (session) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("name, username")
+          .eq("user_id", session.user.id)
+          .single();
+
+        setHasProfile(!!(profile?.name && profile?.username));
+      }
     };
 
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
+      if (!session) {
+        setHasProfile(null);
+      }
     });
 
     return () => {
@@ -34,11 +49,19 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || (isAuthenticated && hasProfile === null)) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  return isAuthenticated ? children : <Navigate to="/auth" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (isAuthenticated && hasProfile === false) {
+    return <Navigate to="/profile-setup" replace />;
+  }
+
+  return children;
 };
 
 const App = () => (
@@ -50,6 +73,7 @@ const App = () => (
         <div className="min-h-screen pb-16 md:pb-0">
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/profile-setup" element={<ProfileSetup />} />
             <Route
               path="/"
               element={

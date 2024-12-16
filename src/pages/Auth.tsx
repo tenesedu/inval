@@ -8,22 +8,46 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate("/");
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("name, username")
+          .eq("user_id", session.user.id)
+          .single();
+
+        if (profile?.name && profile?.username) {
+          navigate("/");
+        } else {
+          navigate("/profile-setup");
+        }
       }
     };
 
     checkUser();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         if (event === "SIGNED_IN") {
           console.log("User signed in:", session?.user.id);
-          navigate("/");
+          
+          // Create initial profile record
+          if (session) {
+            const { error } = await supabase
+              .from("profiles")
+              .insert([
+                { 
+                  user_id: session.user.id,
+                }
+              ])
+              .select()
+              .single();
+
+            if (!error) {
+              navigate("/profile-setup");
+            }
+          }
         }
       }
     );
