@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { toast } from "sonner";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -29,36 +30,49 @@ const Auth = () => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (event === "SIGNED_IN") {
-          console.log("User signed in:", session?.user.id);
+        if (event === "SIGNED_IN" && session) {
+          console.log("User signed in:", session.user.id);
           
-          if (session) {
-            // Check if profile already exists
-            const { data: existingProfile } = await supabase
+          try {
+            // First check if profile exists
+            const { data: existingProfile, error: fetchError } = await supabase
               .from("profiles")
               .select("id")
               .eq("user_id", session.user.id)
               .single();
 
+            if (fetchError && fetchError.code !== 'PGRST116') {
+              console.error("Error checking profile:", fetchError);
+              toast.error("Something went wrong. Please try again.");
+              return;
+            }
+
             if (!existingProfile) {
-              // Create initial profile record with user_id only
-              // The rest of the profile will be completed in ProfileSetup
-              const { error } = await supabase
+              // Create initial profile record
+              const { error: insertError } = await supabase
                 .from("profiles")
                 .insert({
                   user_id: session.user.id,
-                  name: '', // Temporary value, will be updated in ProfileSetup
-                  username: '' // Temporary value, will be updated in ProfileSetup
+                  name: '',
+                  username: '',
+                  created_at: new Date().toISOString()
                 });
 
-              if (!error) {
-                navigate("/profile-setup");
-              } else {
-                console.error("Error creating profile:", error);
+              if (insertError) {
+                console.error("Error creating profile:", insertError);
+                toast.error("Failed to create profile. Please try again.");
+                return;
               }
+
+              console.log("Profile created successfully");
+              navigate("/profile-setup");
             } else {
+              console.log("Profile already exists");
               navigate("/profile-setup");
             }
+          } catch (error) {
+            console.error("Unexpected error:", error);
+            toast.error("An unexpected error occurred. Please try again.");
           }
         }
       }
