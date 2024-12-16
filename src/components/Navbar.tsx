@@ -61,7 +61,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
           {/* Logo */}
           <div className="w-[100px] flex-shrink-0">
             <Link to="/" className="text-xl font-bold text-primary">
@@ -70,22 +70,24 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Center Container */}
-          <div className="flex-1 flex justify-center items-center gap-4 max-w-3xl mx-auto">
+          <div className="flex-1 flex justify-center items-center gap-4 max-w-4xl mx-auto">
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="relative flex-1 max-w-md">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search investments..."
-                className="pl-8 h-9 w-full"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                disabled={isSearching}
-              />
-            </form>
+            <div className="flex-1 max-w-xl">
+              <form onSubmit={handleSearch} className="relative w-full">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search investments..."
+                  className="pl-8 h-9 w-full"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  disabled={isSearching}
+                />
+              </form>
+            </div>
 
             {/* Share Investment Button */}
-            <div className="hidden md:block">
+            <div className="hidden md:block flex-shrink-0">
               <ShareInvestmentDialog>
                 <Button 
                   className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
