@@ -61,18 +61,18 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="w-[100px] flex-shrink-0">
+          <div className="w-[100px]">
             <Link to="/" className="text-xl font-bold text-primary">
               Inval
             </Link>
           </div>
 
           {/* Center Container */}
-          <div className="flex-1 flex justify-center items-center gap-4 max-w-4xl mx-auto">
+          <div className="flex items-center gap-4 max-w-2xl">
             {/* Search Bar */}
-            <div className="flex-1 max-w-xl">
+            <div className="w-[400px]">
               <form onSubmit={handleSearch} className="relative w-full">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -87,7 +87,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             </div>
 
             {/* Share Investment Button */}
-            <div className="hidden md:block flex-shrink-0">
+            <div className="hidden md:block">
               <ShareInvestmentDialog>
                 <Button 
                   className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
@@ -99,9 +99,9 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden md:flex items-center gap-4 flex-shrink-0">
+          <div className="hidden md:flex items-center gap-4">
             <NotificationsDropdown>
-              <Button variant="ghost" size="icon" className="relative flex-shrink-0">
+              <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
               </Button>
             </NotificationsDropdown>
@@ -109,7 +109,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             <Button 
               variant="ghost" 
               onClick={() => navigate('/profile/eduardo_fernando')}
-              className="flex items-center space-x-2 flex-shrink-0"
+              className="flex items-center space-x-2"
             >
               <img 
                 src="/placeholder.svg" 
@@ -123,7 +123,6 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
               variant="ghost"
               size="icon"
               onClick={handleLogout}
-              className="flex-shrink-0"
             >
               <LogOut className="h-5 w-5" />
             </Button>
