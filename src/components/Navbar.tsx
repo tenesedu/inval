@@ -70,7 +70,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Center Container */}
-          <div className="flex items-center gap-4 max-w-2xl ml-8">
+          <div className="flex items-center gap-4 max-w-2xl ml-16">
             {/* Search Bar */}
             <div className="w-[400px]">
               <form onSubmit={handleSearch} className="relative w-full">
