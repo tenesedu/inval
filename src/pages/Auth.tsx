@@ -12,6 +12,7 @@ const Auth = () => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
+        console.log("User is already signed in:", session.user.id);
         navigate("/");
       }
     };
@@ -20,26 +21,35 @@ const Auth = () => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log("Auth state changed:", event, session?.user?.id);
+        
         if (event === "SIGNED_IN" && session) {
-          console.log("User signed in:", session.user.id);
-          
           try {
-            // First check if a profile already exists
-            const { data: existingProfile } = await supabase
+            // Check if profile exists
+            const { data: existingProfile, error: profileError } = await supabase
               .from("profiles")
               .select("id")
               .eq("user_id", session.user.id)
               .maybeSingle();
 
+            if (profileError) {
+              console.error("Error checking profile:", profileError);
+              toast.error("Error checking profile. Please try again.");
+              return;
+            }
+
             if (!existingProfile) {
-              // Create complete profile record
+              // Create initial profile with required fields
+              const username = `user_${session.user.id.split('-')[0]}`;
+              const name = session.user.email?.split('@')[0] || 'User';
+              
               const { error: insertError } = await supabase
                 .from("profiles")
                 .insert({
                   id: crypto.randomUUID(),
                   user_id: session.user.id,
-                  name: session.user.email?.split('@')[0] || 'User',
-                  username: `user_${session.user.id.split('-')[0]}`,
+                  username: username,
+                  name: name,
                   created_at: new Date().toISOString()
                 });
 
