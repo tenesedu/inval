@@ -34,42 +34,25 @@ const Auth = () => {
           console.log("User signed in:", session.user.id);
           
           try {
-            // First check if profile exists
-            const { data: existingProfile, error: fetchError } = await supabase
+            // Create initial profile record with just the user_id
+            const { error: insertError } = await supabase
               .from("profiles")
-              .select("id")
-              .eq("user_id", session.user.id)
-              .single();
+              .insert({
+                id: session.user.id, // Use the auth.users id as the profile id
+                user_id: session.user.id,
+                name: '',
+                username: '',
+                created_at: new Date().toISOString()
+              });
 
-            if (fetchError && fetchError.code !== 'PGRST116') {
-              console.error("Error checking profile:", fetchError);
-              toast.error("Something went wrong. Please try again.");
+            if (insertError) {
+              console.error("Error creating profile:", insertError);
+              toast.error("Failed to create profile. Please try again.");
               return;
             }
 
-            if (!existingProfile) {
-              // Create initial profile record
-              const { error: insertError } = await supabase
-                .from("profiles")
-                .insert({
-                  user_id: session.user.id,
-                  name: '',
-                  username: '',
-                  created_at: new Date().toISOString()
-                });
-
-              if (insertError) {
-                console.error("Error creating profile:", insertError);
-                toast.error("Failed to create profile. Please try again.");
-                return;
-              }
-
-              console.log("Profile created successfully");
-              navigate("/profile-setup");
-            } else {
-              console.log("Profile already exists");
-              navigate("/profile-setup");
-            }
+            console.log("Profile created successfully");
+            navigate("/profile-setup");
           } catch (error) {
             console.error("Unexpected error:", error);
             toast.error("An unexpected error occurred. Please try again.");

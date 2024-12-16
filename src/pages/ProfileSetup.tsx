@@ -45,11 +45,18 @@ const ProfileSetup = () => {
         return;
       }
 
-      const { data: profile } = await supabase
+      // Check if profile exists and is incomplete
+      const { data: profile, error } = await supabase
         .from("profiles")
         .select("name, username")
         .eq("user_id", session.user.id)
         .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        navigate("/auth");
+        return;
+      }
 
       if (profile?.name && profile?.username) {
         navigate("/");
@@ -73,7 +80,6 @@ const ProfileSetup = () => {
           name: values.name,
           username: values.username,
           bio: values.bio || null,
-          user_id: userId,
         })
         .eq("user_id", userId);
 
