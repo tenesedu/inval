@@ -34,24 +34,36 @@ const Auth = () => {
           console.log("User signed in:", session.user.id);
           
           try {
-            // Create initial profile record with just the user_id
-            const { error: insertError } = await supabase
+            // First check if a profile already exists
+            const { data: existingProfile } = await supabase
               .from("profiles")
-              .insert({
-                id: session.user.id, // Use the auth.users id as the profile id
-                user_id: session.user.id,
-                name: '',
-                username: '',
-                created_at: new Date().toISOString()
-              });
+              .select("id")
+              .eq("user_id", session.user.id)
+              .maybeSingle(); // Use maybeSingle() instead of single() to avoid 406 error
 
-            if (insertError) {
-              console.error("Error creating profile:", insertError);
-              toast.error("Failed to create profile. Please try again.");
-              return;
+            if (!existingProfile) {
+              // Create initial profile record with just the user_id
+              const { error: insertError } = await supabase
+                .from("profiles")
+                .insert({
+                  id: crypto.randomUUID(), // Generate a new UUID for the profile
+                  user_id: session.user.id,
+                  name: '',
+                  username: '',
+                  created_at: new Date().toISOString()
+                });
+
+              if (insertError) {
+                console.error("Error creating profile:", insertError);
+                toast.error("Failed to create profile. Please try again.");
+                return;
+              }
+
+              console.log("Profile created successfully");
+            } else {
+              console.log("Profile already exists");
             }
-
-            console.log("Profile created successfully");
+            
             navigate("/profile-setup");
           } catch (error) {
             console.error("Unexpected error:", error);
