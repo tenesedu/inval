@@ -63,7 +63,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="w-[180px]">
+          <div className="w-[180px] mr-12">
             <Link to="/" className="text-xl font-bold text-primary">
               Inval
             </Link>
@@ -99,9 +99,9 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 ml-12">
             <NotificationsDropdown>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative ml-12">
                 <Bell className="h-5 w-5" />
               </Button>
             </NotificationsDropdown>
