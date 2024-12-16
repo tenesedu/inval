@@ -25,12 +25,20 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       setIsAuthenticated(!!session);
 
       if (session) {
-        const { data: profile } = await supabase
+        console.log("Checking profile for user:", session.user.id);
+        const { data: profile, error } = await supabase
           .from("profiles")
-          .select("name, username")
+          .select("*")
           .eq("user_id", session.user.id)
           .single();
 
+        if (error) {
+          console.error("Error fetching profile:", error);
+          setHasProfile(false);
+          return;
+        }
+
+        console.log("Profile data:", profile);
         setHasProfile(!!(profile?.name && profile?.username));
       }
     };
@@ -38,6 +46,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session?.user?.id);
       setIsAuthenticated(!!session);
       if (!session) {
         setHasProfile(null);
