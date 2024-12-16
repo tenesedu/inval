@@ -10,34 +10,43 @@ const Auth = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<any>(null);
   const [needsProfile, setNeedsProfile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        console.log("User is signed in:", session.user.id);
-        setSession(session);
+      try {
+        console.log("Checking user session...");
+        const { data: { session } } = await supabase.auth.getSession();
         
-        // Check if user has a profile
-        const { data: profile, error } = await supabase
-          .from("profiles")
-          .select("id")
-          .eq("user_id", session.user.id)
-          .single();
+        if (session) {
+          console.log("User session found:", session.user.id);
+          setSession(session);
+          
+          // Check if user has a profile
+          const { data: profiles, error } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("user_id", session.user.id);
 
-        if (error && error.code !== "PGRST116") {
-          console.error("Error checking profile:", error);
-          toast.error("Error checking profile status");
-          return;
-        }
+          if (error) {
+            console.error("Error checking profile:", error);
+            toast.error("Error checking profile status");
+            return;
+          }
 
-        if (!profile) {
-          console.log("User needs to create profile");
-          setNeedsProfile(true);
-        } else {
-          console.log("User has profile, redirecting to home");
-          navigate("/");
+          if (!profiles || profiles.length === 0) {
+            console.log("User needs to create profile");
+            setNeedsProfile(true);
+          } else {
+            console.log("User has profile, redirecting to home");
+            navigate("/");
+          }
         }
+      } catch (error) {
+        console.error("Error in checkUser:", error);
+        toast.error("An error occurred while checking user status");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -50,26 +59,33 @@ const Auth = () => {
         if (event === "SIGNED_IN" && session) {
           setSession(session);
           
-          // Check if user has a profile
-          const { data: profile, error } = await supabase
-            .from("profiles")
-            .select("id")
-            .eq("user_id", session.user.id)
-            .single();
+          try {
+            // Check if user has a profile
+            const { data: profiles, error } = await supabase
+              .from("profiles")
+              .select("id")
+              .eq("user_id", session.user.id);
 
-          if (error && error.code !== "PGRST116") {
-            console.error("Error checking profile:", error);
+            if (error) {
+              console.error("Error checking profile:", error);
+              toast.error("Error checking profile status");
+              return;
+            }
+
+            if (!profiles || profiles.length === 0) {
+              console.log("New user needs to create profile");
+              setNeedsProfile(true);
+            } else {
+              console.log("User has profile, redirecting to home");
+              navigate("/");
+            }
+          } catch (error) {
+            console.error("Error checking profile after sign in:", error);
             toast.error("Error checking profile status");
-            return;
           }
-
-          if (!profile) {
-            console.log("New user needs to create profile");
-            setNeedsProfile(true);
-          } else {
-            console.log("User has profile, redirecting to home");
-            navigate("/");
-          }
+        } else if (event === "SIGNED_OUT") {
+          setSession(null);
+          setNeedsProfile(false);
         }
       }
     );
@@ -78,6 +94,14 @@ const Auth = () => {
       subscription.unsubscribe();
     };
   }, [navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
+        <div className="text-primary">Loading...</div>
+      </div>
+    );
+  }
 
   if (needsProfile && session) {
     return <ProfileSetup userId={session.user.id} />;
