@@ -70,7 +70,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           </div>
 
           {/* Center Container */}
-          <div className="flex items-center gap-4 max-w-xl ml-70">
+          <div className="flex items-center gap-4 max-w-xl ml-71">
             {/* Search Bar */}
             <div className="w-[400px]">
               <form onSubmit={handleSearch} className="relative w-full">
@@ -87,7 +87,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             </div>
 
             {/* Share Investment Button */}
-            <div className="hidden md:block ml-24">
+            <div className="hidden md:block ml-23">
               <ShareInvestmentDialog>
                 <Button 
                   className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
