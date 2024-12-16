@@ -32,19 +32,31 @@ const Auth = () => {
         if (event === "SIGNED_IN") {
           console.log("User signed in:", session?.user.id);
           
-          // Create initial profile record
           if (session) {
-            const { error } = await supabase
+            // Check if profile already exists
+            const { data: existingProfile } = await supabase
               .from("profiles")
-              .insert([
-                { 
-                  user_id: session.user.id,
-                }
-              ])
-              .select()
+              .select("id")
+              .eq("user_id", session.user.id)
               .single();
 
-            if (!error) {
+            if (!existingProfile) {
+              // Create initial profile record with user_id only
+              // The rest of the profile will be completed in ProfileSetup
+              const { error } = await supabase
+                .from("profiles")
+                .insert({
+                  user_id: session.user.id,
+                  name: '', // Temporary value, will be updated in ProfileSetup
+                  username: '' // Temporary value, will be updated in ProfileSetup
+                });
+
+              if (!error) {
+                navigate("/profile-setup");
+              } else {
+                console.error("Error creating profile:", error);
+              }
+            } else {
               navigate("/profile-setup");
             }
           }
