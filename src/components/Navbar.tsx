@@ -8,7 +8,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
 import { NotificationsDropdown } from "./NotificationsDropdown";
 
-export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[]) => void }) => {
+export const Navbar = ({
+  onSearchResults,
+}: {
+  onSearchResults?: (results: any[]) => void;
+}) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -22,13 +26,12 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
 
     setIsSearching(true);
     try {
-      const { data, error } = await supabase
-        .rpc('search_posts', {
-          search_query: searchQuery.trim()
-        });
+      const { data, error } = await supabase.rpc("search_posts", {
+        search_query: searchQuery.trim(),
+      });
 
       if (error) {
-        console.error('Search error:', error);
+        console.error("Search error:", error);
         toast.error("An error occurred while searching");
         return;
       }
@@ -41,7 +44,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
         toast.info("No results found");
       }
     } catch (err) {
-      console.error('Search error:', err);
+      console.error("Search error:", err);
       toast.error("An error occurred while searching");
     } finally {
       setIsSearching(false);
@@ -51,9 +54,9 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      navigate('/auth');
+      navigate("/auth");
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
       toast.error("Failed to log out");
     }
   };
@@ -73,7 +76,7 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
           <div className="flex items-center gap-4 max-w-xl ml-71">
             {/* Search Bar */}
             <div className="w-[400px]">
-              <form onSubmit={handleSearch} className="relative w-full">
+              <form onSubmit={handleSearch} className="relative w-full ml-4">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
@@ -87,11 +90,9 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
             </div>
 
             {/* Share Investment Button */}
-            <div className="hidden md:block ml-23">
+            <div className="hidden md:block ml-4">
               <ShareInvestmentDialog>
-                <Button 
-                  className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap"
-                >
+                <Button className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap">
                   Share Investment
                 </Button>
               </ShareInvestmentDialog>
@@ -106,24 +107,20 @@ export const Navbar = ({ onSearchResults }: { onSearchResults?: (results: any[])
               </Button>
             </NotificationsDropdown>
 
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/profile/eduardo_fernando')}
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/profile/eduardo_fernando")}
               className="flex items-center space-x-2"
             >
-              <img 
-                src="/placeholder.svg" 
-                alt="Eduardo Fernando" 
+              <img
+                src="/placeholder.svg"
+                alt="Eduardo Fernando"
                 className="w-8 h-8 rounded-full"
               />
               <span className="whitespace-nowrap">Eduardo Fernando</span>
             </Button>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLogout}
-            >
+            <Button variant="ghost" size="icon" onClick={handleLogout}>
               <LogOut className="h-5 w-5" />
             </Button>
           </div>
