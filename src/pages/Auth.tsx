@@ -16,25 +16,33 @@ const Auth = () => {
     const checkUser = async () => {
       try {
         console.log("Checking user session...");
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error("Session error:", error);
+          setIsLoading(false);
+          return;
+        }
         
         if (session) {
           console.log("User session found:", session.user.id);
           setSession(session);
           
           // Check if user has a profile
-          const { data: profiles, error } = await supabase
+          const { data: profiles, error: profileError } = await supabase
             .from("profiles")
             .select("id")
-            .eq("user_id", session.user.id);
+            .eq("user_id", session.user.id)
+            .single();
 
-          if (error) {
-            console.error("Error checking profile:", error);
+          if (profileError && profileError.code !== 'PGRST116') {
+            console.error("Error checking profile:", profileError);
             toast.error("Error checking profile status");
+            setIsLoading(false);
             return;
           }
 
-          if (!profiles || profiles.length === 0) {
+          if (!profiles) {
             console.log("User needs to create profile");
             setNeedsProfile(true);
           } else {
@@ -61,18 +69,19 @@ const Auth = () => {
           
           try {
             // Check if user has a profile
-            const { data: profiles, error } = await supabase
+            const { data: profiles, error: profileError } = await supabase
               .from("profiles")
               .select("id")
-              .eq("user_id", session.user.id);
+              .eq("user_id", session.user.id)
+              .single();
 
-            if (error) {
-              console.error("Error checking profile:", error);
+            if (profileError && profileError.code !== 'PGRST116') {
+              console.error("Error checking profile:", profileError);
               toast.error("Error checking profile status");
               return;
             }
 
-            if (!profiles || profiles.length === 0) {
+            if (!profiles) {
               console.log("New user needs to create profile");
               setNeedsProfile(true);
             } else {
