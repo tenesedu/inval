@@ -92,7 +92,7 @@ export const Navbar = ({
             {/* Share Investment Button */}
             <div className="hidden md:block ml-4">
               <ShareInvestmentDialog>
-                <Button className="bg-primary hover:bg-primary-dark rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap">
+                <Button className="bg-[#ea384c] hover:bg-[#ea384c]/90 rounded-none rounded-l-lg rounded-r-lg whitespace-nowrap">
                   Share Investment
                 </Button>
               </ShareInvestmentDialog>
