@@ -2,55 +2,55 @@ import { useParams } from "react-router-dom";
 import { Post } from "@/components/Post";
 import { TrendingUp, Users, Award } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
-
-const MOCK_POSTS = [
-  {
-    user: {
-      name: "Eduardo Fernando",
-      avatar: "/placeholder.svg",
-      username: "eduardo_fernando",
-    },
-    content: "Long-term investment strategies have consistently proven their worth. Focus on fundamentals, not market noise. 📈",
-    investment: {
-      type: "Portfolio Strategy",
-      name: "Long-term Growth",
-      return: 15.7,
-    },
-    timestamp: "1d ago",
-    likes: 142,
-    comments: 28,
-  },
-  {
-    user: {
-      name: "Eduardo Fernando",
-      avatar: "/placeholder.svg",
-      username: "eduardo_fernando",
-    },
-    content: "Tech sector analysis: AI companies showing strong growth potential for 2024. Keep an eye on semiconductor manufacturers.",
-    investment: {
-      type: "Tech Stocks",
-      name: "AI Sector",
-      return: 22.3,
-    },
-    timestamp: "3d ago",
-    likes: 189,
-    comments: 45,
-  },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const { username } = useParams();
-  const user = {
-    name: "Eduardo Fernando",
-    avatar: "/placeholder.svg",
-    username: "eduardo_fernando",
-    bio: "Passionate investor focused on long-term growth opportunities.",
-    stats: {
-      totalReturn: 25.5,
-      followers: 1234,
-      ranking: 42,
-    },
-  };
+
+  const [profile, setProfile] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+
+      try {
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+        if (userError) throw userError;
+
+        // Fetch user profile from 'profiles' table
+        const { data: userProfile, error: profileError } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .single();
+
+        if (profileError) throw profileError;
+
+        // Set fetched profile
+        setProfile(userProfile);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // Early return if loading or error
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  // If no profile is found, display a message
+  if (!profile) return <p>No profile found</p>;
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -58,11 +58,16 @@ const Profile = () => {
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-lg border p-6 mb-6">
           <div className="flex items-center space-x-4 mb-6">
-            <img src={user.avatar} alt={user.name} className="w-20 h-20 rounded-full" />
+            {/* Check if profile is loaded before accessing avatar */}
+            <img
+              src={profile.avatar || "/placeholder.svg"} // Use a default avatar if not available
+              alt={profile.name}
+              className="w-20 h-20 rounded-full"
+            />
             <div>
-              <h1 className="text-2xl font-bold">{user.name}</h1>
-              <p className="text-neutral-500">@{user.username}</p>
-              <p className="mt-2">{user.bio}</p>
+              <h1 className="text-2xl font-bold">{profile.name}</h1>
+              <p className="text-neutral-500">@{profile.username}</p>
+              <p className="mt-2">{profile.bio}</p>
             </div>
           </div>
 
@@ -72,30 +77,32 @@ const Profile = () => {
                 <TrendingUp className="h-5 w-5 text-primary" />
                 <span className="font-semibold">Total Return</span>
               </div>
-              <p className="text-2xl font-bold text-success">+{user.stats.totalReturn}%</p>
+              <p className="text-2xl font-bold text-success">
+                {/* Example: {user.stats.totalReturn}% */}
+              </p>
             </div>
             <div className="bg-neutral-50 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <Users className="h-5 w-5 text-primary" />
                 <span className="font-semibold">Followers</span>
               </div>
-              <p className="text-2xl font-bold">{user.stats.followers}</p>
+              {/* Example: {user.stats.followers} */}
             </div>
             <div className="bg-neutral-50 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <Award className="h-5 w-5 text-primary" />
                 <span className="font-semibold">Ranking</span>
               </div>
-              <p className="text-2xl font-bold">#{user.stats.ranking}</p>
+              {/* Example: #{user.stats.ranking} */}
             </div>
           </div>
         </div>
 
         <div className="space-y-4">
           <h2 className="text-xl font-semibold mb-4">Investment History</h2>
-          {MOCK_POSTS.map((post, index) => (
+          {/* {MOCK_POSTS.map((post, index) => (
             <Post key={index} {...post} />
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

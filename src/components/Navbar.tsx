@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Search, Bell, LogOut } from "lucide-react";
 import { Input } from "./ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ShareInvestmentDialog } from "./ShareInvestmentDialog";
@@ -16,6 +16,39 @@ export const Navbar = ({
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        console.error("No user Found");
+        return;
+      } else {
+        const { data: profileData, error } = await supabase
+          .from("profiles")
+          .select("name, username")
+          .eq("user_id", user.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching profile:", error);
+        } else {
+          setProfile(profileData);
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  if (!profile) {
+    return <p>Loading...</p>;
+  }
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,7 +142,7 @@ export const Navbar = ({
 
             <Button
               variant="ghost"
-              onClick={() => navigate("/profile/eduardo_fernando")}
+              onClick={() => navigate(`/profile/${profile.username}`)}
               className="flex items-center space-x-2"
             >
               <img
@@ -117,7 +150,7 @@ export const Navbar = ({
                 alt="Eduardo Fernando"
                 className="w-8 h-8 rounded-full"
               />
-              <span className="whitespace-nowrap">Eduardo Fernando</span>
+              <span className="whitespace-nowrap">{profile.username}</span>
             </Button>
 
             <Button variant="ghost" size="icon" onClick={handleLogout}>
