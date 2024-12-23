@@ -31,7 +31,7 @@ export const Navbar = ({
       } else {
         const { data: profileData, error } = await supabase
           .from("profiles")
-          .select("name, username")
+          .select("name, username, avatar")
           .eq("user_id", user.id)
           .single();
 
@@ -146,8 +146,8 @@ export const Navbar = ({
               className="flex items-center space-x-2"
             >
               <img
-                src="/placeholder.svg"
-                alt="Eduardo Fernando"
+                src={profile.avatar || "/placeholder.svg"} // Use a default avatar if not available
+                alt={profile.name}
                 className="w-8 h-8 rounded-full"
               />
               <span className="whitespace-nowrap">{profile.username}</span>

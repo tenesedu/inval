@@ -16,18 +16,21 @@ const Auth = () => {
     const checkUser = async () => {
       try {
         console.log("Checking user session...");
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
         if (error) {
           console.error("Session error:", error);
           setIsLoading(false);
           return;
         }
-        
+
         if (session) {
           console.log("User session found:", session.user.id);
           setSession(session);
-          
+
           // Check if user has a profile
           const { data: profiles, error: profileError } = await supabase
             .from("profiles")
@@ -35,7 +38,7 @@ const Auth = () => {
             .eq("user_id", session.user.id)
             .single();
 
-          if (profileError && profileError.code !== 'PGRST116') {
+          if (profileError && profileError.code !== "PGRST116") {
             console.error("Error checking profile:", profileError);
             toast.error("Error checking profile status");
             setIsLoading(false);
@@ -60,44 +63,44 @@ const Auth = () => {
 
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log("Auth state changed:", event, session?.user?.id);
-        
-        if (event === "SIGNED_IN" && session) {
-          setSession(session);
-          
-          try {
-            // Check if user has a profile
-            const { data: profiles, error: profileError } = await supabase
-              .from("profiles")
-              .select("id")
-              .eq("user_id", session.user.id)
-              .single();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event, session?.user?.id);
 
-            if (profileError && profileError.code !== 'PGRST116') {
-              console.error("Error checking profile:", profileError);
-              toast.error("Error checking profile status");
-              return;
-            }
+      if (event === "SIGNED_IN" && session) {
+        setSession(session);
 
-            if (!profiles) {
-              console.log("New user needs to create profile");
-              setNeedsProfile(true);
-            } else {
-              console.log("User has profile, redirecting to home");
-              navigate("/");
-            }
-          } catch (error) {
-            console.error("Error checking profile after sign in:", error);
+        try {
+          // Check if user has a profile
+          const { data: profiles, error: profileError } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("user_id", session.user.id)
+            .single();
+
+          if (profileError && profileError.code !== "PGRST116") {
+            console.error("Error checking profile:", profileError);
             toast.error("Error checking profile status");
+            return;
           }
-        } else if (event === "SIGNED_OUT") {
-          setSession(null);
-          setNeedsProfile(false);
+
+          if (!profiles) {
+            console.log("New user needs to create profile");
+            setNeedsProfile(true);
+          } else {
+            console.log("User has profile, redirecting to home");
+            navigate("/");
+          }
+        } catch (error) {
+          console.error("Error checking profile after sign in:", error);
+          toast.error("Error checking profile status");
         }
+      } else if (event === "SIGNED_OUT") {
+        setSession(null);
+        setNeedsProfile(false);
       }
-    );
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -113,7 +116,7 @@ const Auth = () => {
   }
 
   if (needsProfile && session) {
-    return <ProfileSetup userId={session.user.id} />;
+    return <ProfileSetup session={session} />;
   }
 
   return (
@@ -129,11 +132,11 @@ const Auth = () => {
             variables: {
               default: {
                 colors: {
-                  brand: '#6E59A5',
-                  brandAccent: '#4A3B80',
-                }
-              }
-            }
+                  brand: "#6E59A5",
+                  brandAccent: "#4A3B80",
+                },
+              },
+            },
           }}
           providers={[]}
         />
