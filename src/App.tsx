@@ -14,6 +14,7 @@ import { MobileNavBar } from "./components/MobileNavBar";
 
 const queryClient = new QueryClient();
 
+
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
