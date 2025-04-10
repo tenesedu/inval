@@ -9,6 +9,12 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: [
+      'inval.onrender.com',
+      'localhost',
+      '127.0.0.1',
+      '192.168.1.48'
+    ]
   },
   plugins: [
     react(),
