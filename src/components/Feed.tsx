@@ -1,142 +1,115 @@
-import { Post } from "./Post";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-react";
 
-type PostWithProfile = {
-  id: string;
-  content: string | null;
-  investment_type: string | null;
-  investment_name: string | null;
-  investment_return: number | null;
-  likes: number | null;
-  comments: number | null;
-  created_at: string;
-  profiles: {
-    name: string;
-    avatar: string | null;
-    username: string;
-  };
-};
-
-const POSTS_PER_PAGE = 5;
+const mockPosts = [
+  {
+    id: 1,
+    username: "johndoe",
+    name: "John Doe",
+    avatar: "https://i.pravatar.cc/150?img=1",
+    content: "Just invested in Tesla. Bullish on their AI and robotics division! 🚀",
+    timestamp: "2h ago",
+    likes: 245,
+    comments: 32,
+    shares: 12,
+    investment: {
+      amount: 5000,
+      return: 15.2,
+      isPositive: true
+    }
+  },
+  {
+    id: 2,
+    username: "janedoe",
+    name: "Jane Doe",
+    avatar: "https://i.pravatar.cc/150?img=2",
+    content: "Diversifying my portfolio with some gold ETFs. What do you think about precious metals in the current market?",
+    timestamp: "4h ago",
+    likes: 189,
+    comments: 45,
+    shares: 8,
+    investment: {
+      amount: 10000,
+      return: -2.5,
+      isPositive: false
+    }
+  },
+  {
+    id: 3,
+    username: "investorpro",
+    name: "Investor Pro",
+    avatar: "https://i.pravatar.cc/150?img=3",
+    content: "My analysis of the tech sector shows promising growth opportunities in AI and cloud computing. Here's my detailed breakdown...",
+    timestamp: "6h ago",
+    likes: 432,
+    comments: 78,
+    shares: 56,
+    investment: {
+      amount: 25000,
+      return: 8.7,
+      isPositive: true
+    }
+  }
+];
 
 export const Feed = () => {
-  const { ref, inView } = useInView();
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["posts"],
-    queryFn: async ({ pageParam = 0 }) => {
-      console.log("Fetching posts page:", pageParam);
-      const from = Number(pageParam) * POSTS_PER_PAGE;
-      const to = from + POSTS_PER_PAGE - 1;
-      const { data, error } = await supabase
-        .from("posts")
-        .select(
-          `
-          *,
-          profiles:profile_id (
-            name,
-            avatar,
-            username
-          )
-        `
-        )
-        .order("created_at", { ascending: false })
-        .range(from, to);
-      if (error) {
-        console.error("Error fetching posts:", error);
-        throw error;
-      }
-      console.log("Posts fetched:", data);
-      return data as unknown as PostWithProfile[];
-    },
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage?.length === POSTS_PER_PAGE ? allPages.length : undefined;
-    },
-    initialPageParam: 0,
-  });
-
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  if (error) {
-    toast.error("Failed to load posts");
-    return (
-      <div className="text-center p-4 text-red-500">
-        Failed to load posts. Please try again later.
-      </div>
-    );
-  }
-
-  if (status === "pending") {
-    return (
-      <div className="space-y-4">
-        <div className="animate-pulse">
-          <div className="h-32 bg-gray-200 rounded-lg"></div>
-        </div>
-        <div className="animate-pulse">
-          <div className="h-32 bg-gray-200 rounded-lg"></div>
-        </div>
-        <div className="animate-pulse">
-          <div className="h-32 bg-gray-200 rounded-lg"></div>
-        </div>
-      </div>
-    );
-  }
+  const [posts] = useState(mockPosts);
 
   return (
-    <div className="space-y-4">
-      {data?.pages.map((page, i) => (
-        <div key={i}>
-          {page.map((post) => {
-            // Skip posts with missing profile data
-            if (!post.profiles) {
-              console.warn(`Post ${post.id} has missing profile data`);
-              return null;
-            }
-            return (
-              <Post
-                key={post.id}
-                user={{
-                  name: post.profiles.name,
-                  avatar: post.profiles.avatar || "/placeholder.svg",
-                  username: post.profiles.username,
-                }}
-                content={post.content || ""}
-                investment={{
-                  type: post.investment_type || "",
-                  name: post.investment_name || "",
-                  return: post.investment_return || 0,
-                }}
-                timestamp={new Date(post.created_at).toLocaleString()}
-                likes={post.likes || 0}
-                comments={post.comments || 0}
-              />
-            );
-          })}
-        </div>
-      ))}
-      <div ref={ref} className="h-10">
-        {isFetchingNextPage && (
-          <div className="text-center p-4">
-            <div className="animate-pulse">
-              <div className="h-32 bg-gray-200 rounded-lg"></div>
+    <div className="space-y-6">
+      {posts.map((post) => (
+        <Card key={post.id} className="hover:shadow-lg transition-shadow">
+          <CardHeader className="flex flex-row items-center space-x-4">
+            <img
+              src={post.avatar}
+              alt={post.name}
+              className="w-12 h-12 rounded-full"
+            />
+            <div>
+              <CardTitle className="text-lg">{post.name}</CardTitle>
+              <p className="text-sm text-muted-foreground">@{post.username} · {post.timestamp}</p>
             </div>
-          </div>
-        )}
-      </div>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">{post.content}</p>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+              <div className="flex items-center space-x-1">
+                <DollarSign className="h-4 w-4" />
+                <span>${post.investment.amount.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                {post.investment.isPositive ? (
+                  <TrendingUp className="h-4 w-4 text-green-500" />
+                ) : (
+                  <TrendingDown className="h-4 w-4 text-red-500" />
+                )}
+                <span className={post.investment.isPositive ? "text-green-500" : "text-red-500"}>
+                  {post.investment.return}%
+                </span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Calendar className="h-4 w-4" />
+                <span>1 month</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4 mt-4 pt-4 border-t">
+              <button className="flex items-center space-x-1 text-muted-foreground hover:text-primary">
+                <span>{post.likes}</span>
+                <span>Likes</span>
+              </button>
+              <button className="flex items-center space-x-1 text-muted-foreground hover:text-primary">
+                <span>{post.comments}</span>
+                <span>Comments</span>
+              </button>
+              <button className="flex items-center space-x-1 text-muted-foreground hover:text-primary">
+                <span>{post.shares}</span>
+                <span>Shares</span>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };
