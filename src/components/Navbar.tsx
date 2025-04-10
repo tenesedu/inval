@@ -17,39 +17,6 @@ export const Navbar = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        console.error("No user Found");
-        return;
-      } else {
-        const { data: profileData, error } = await supabase
-          .from("profiles")
-          .select("name, username, avatar")
-          .eq("user_id", user.id)
-          .single();
-
-        if (error) {
-          console.error("Error fetching profile:", error);
-        } else {
-          setProfile(profileData);
-        }
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  if (!profile) {
-    return <p>Loading...</p>;
-  }
-
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
@@ -81,16 +48,6 @@ export const Navbar = ({
       toast.error("An error occurred while searching");
     } finally {
       setIsSearching(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      navigate("/auth");
-    } catch (error) {
-      console.error("Error logging out:", error);
-      toast.error("Failed to log out");
     }
   };
 
@@ -139,23 +96,6 @@ export const Navbar = ({
                 <Bell className="h-5 w-5" />
               </Button>
             </NotificationsDropdown>
-
-            <Button
-              variant="ghost"
-              onClick={() => navigate(`/profile/${profile.username}`)}
-              className="flex items-center space-x-2"
-            >
-              <img
-                src={profile.avatar || "/placeholder.svg"} // Use a default avatar if not available
-                alt={profile.name}
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="whitespace-nowrap">{profile.username}</span>
-            </Button>
-
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
-              <LogOut className="h-5 w-5" />
-            </Button>
           </div>
         </div>
       </div>

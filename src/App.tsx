@@ -68,39 +68,10 @@ const App = () => (
       <BrowserRouter>
         <div className="min-h-screen pb-16 md:pb-0">
           <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile/:username"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ai-gains"
-              element={
-                <ProtectedRoute>
-                  <AiGains />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/notifications"
-              element={
-                <ProtectedRoute>
-                  <Notifications />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/" element={<Index />} />
+            <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/ai-gains" element={<AiGains />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Routes>
           <MobileNavBar />
         </div>
