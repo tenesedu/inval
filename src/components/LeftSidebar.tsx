@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, BarChart2, DollarSign, PieChart } from "lucide-react";
+import { TrendingUp, BarChart2, DollarSign, PieChart, Brain } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const mockCategories = [
   {
@@ -70,6 +72,12 @@ const mockStats = [
 ];
 
 export const LeftSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleAiGainsClick = () => {
+    navigate('/ai-gains');
+  };
+
   return (
     <div className="space-y-6">
       {/* Statistics */}
@@ -97,6 +105,27 @@ export const LeftSidebar = () => {
               </div>
             );
           })}
+        </CardContent>
+      </Card>
+
+      {/* AI Gains Section */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-2">
+            <Brain className="h-5 w-5 text-primary" />
+            <CardTitle>AI Gains</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            Get personalized investment strategies based on your favorite investors' track records and market analysis.
+          </p>
+          <Button 
+            onClick={handleAiGainsClick}
+            className="w-full bg-primary hover:bg-primary/90"
+          >
+            Generate AI Strategy
+          </Button>
         </CardContent>
       </Card>
 
